@@ -27,7 +27,7 @@ class UserManager {
             }
             return console.log(UserManager.#users)
         } catch (error) {
-            return console,error(error.message)
+            return console.error(error.message)
         }
     }
     readOne(id) {
