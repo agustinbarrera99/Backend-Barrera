@@ -51,7 +51,3 @@ users.create({name: "juan", photo:"url", email: "segundo@mail"})
 
 users.read()
 users.readOne(2)
-
-
-
-

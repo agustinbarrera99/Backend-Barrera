@@ -52,16 +52,3 @@ products.create({title:"mouse", photo: "url", price: 20, stock: 15})
 products.create({photo: "url", price: 30, stock:"50"})
 products.read()
 products.readOne(2)
-
-
-
-
-
-
-
-
-
-
-
-
-
