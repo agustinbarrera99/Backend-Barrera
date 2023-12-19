@@ -1,0 +1,4 @@
+# segundo desafio de programacion backend 
+
+### ## En este desafio se crearon los archivos product.fs.js y user.fs.js que gestionan los usuarios y los productos a traves del modulo file system con sus metodos WriteFileSync que se encarga de crear el archivo en caso de que no este y ademas agregar los productos/usuarios y el metodo readFile utilizado de manera asincronica para leer los productos/usuarios y mostrarlos en la consola.
+### Ademas he agregado una validacion para que en el caso de que se quiera agregar un usuario con un mail que ya esta en el json no se puda y devuelva un error de igual manera sucede cuando se quiere agregar un producto cuyo nombre ya esta en el json de productos
