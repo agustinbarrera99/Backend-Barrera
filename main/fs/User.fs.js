@@ -1,21 +1,20 @@
 const fs = require("fs");
 
-const ruta = "./main/fs/data/users.json";
-
 class UserManager {
-  constructor() {
+  constructor(path) {
     this.users = [];
     this.init();
+    this.path = path;
   }
   init() {
-    const fileExists = fs.existsSync(ruta);
+    const fileExists = fs.existsSync(this.path);
     if (fileExists) {
-      const fileData = fs.readFileSync(ruta, "utf-8");
+      const fileData = fs.readFileSync(this.path, "utf-8");
       if (fileData.trim() !== "") {
         this.users = JSON.parse(fileData);
       }
     } else {
-      fs.writeFileSync(ruta, JSON.stringify([], null, 2));
+      fs.writeFileSync(this.path, JSON.stringify([], null, 2));
     }
   }
   create(data) {
@@ -38,14 +37,14 @@ class UserManager {
         email,
       };
       this.users.push(user);
-      fs.writeFileSync(ruta, JSON.stringify(this.users, null, 2));
+      fs.writeFileSync(this.path, JSON.stringify(this.users, null, 2));
     } catch (error) {
       console.error(error.message);
     }
   }
   read() {
-    fs.promises
-      .readFile(ruta, "utf-8")
+    return fs.promises
+      .readFile(this.path, "utf-8")
       .then((res) => {
         const parsedData = JSON.parse(res);
         console.log(parsedData);
@@ -55,8 +54,8 @@ class UserManager {
       });
   }
   readOne(id) {
-    fs.promises
-      .readFile(ruta, "utf-8")
+    return fs.promises
+      .readFile(this.path, "utf-8")
       .then((res) => {
         const parsedData = JSON.parse(res);
         const one = parsedData.find((x) => x.id === id);
@@ -71,7 +70,7 @@ class UserManager {
   }
 }
 
-const user = new UserManager();
+const user = new UserManager("./main/fs/data/users.json");
 
 user.create({ name: "juan", photo: "url", email: "agustin@mail" });
 
