@@ -1,4 +1,3 @@
-# segundo desafio de programacion backend 
+# primera pre entrega de programacion backend coderhouse
 
-### ## En este desafio se crearon los archivos product.fs.js y user.fs.js que gestionan los usuarios y los productos a traves del modulo file system con sus metodos WriteFileSync que se encarga de crear el archivo en caso de que no este y ademas agregar los productos/usuarios y el metodo readFile utilizado de manera asincronica para leer los productos/usuarios y mostrarlos en la consola.
-### Ademas he agregado una validacion para que en el caso de que se quiera agregar un usuario con un mail que ya esta en el json no se puda y devuelva un error de igual manera sucede cuando se quiere agregar un producto cuyo nombre ya esta en el json de productos
+#### En esta entrega estructure todas las carpetas dentro de una carpeta principa llamada server y cree la carpeta src que contiene la carpeta data, middlewares y routers. tambien cree la carpeta public. y agregue los metodos que faltaban a todas los archivos, de usuarios, orders y productos tanto de fs como de memory. cree todos los endpoints que pedia la entrega para cada una de las rutas y utilize los middlewares correspondientes
