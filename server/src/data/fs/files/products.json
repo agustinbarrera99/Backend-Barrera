@@ -1,16 +1,9 @@
 [
   {
-    "id": "e8fccb7eeb464a07c27c74b9",
-    "title": "monitor",
-    "photo": "url",
-    "price": 50,
-    "stock": 40
-  },
-  {
     "id": "26bb8eef05a29cce7b95b828",
     "title": "mousepad",
     "photo": "url",
-    "price": 60,
+    "price": 30,
     "stock": 40
   },
   {
@@ -33,5 +26,12 @@
     "photo": "url",
     "price": 200,
     "stock": 21
+  },
+  {
+    "id": "ff88d62e86657a8d007cdeb7",
+    "title": "usb",
+    "photo": "url",
+    "price": 30,
+    "stock": 10
   }
 ]

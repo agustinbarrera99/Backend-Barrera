@@ -21,32 +21,19 @@ class UserManager {
   async create(data) {
     try {
         const { name, photo, email } = data;
-        if (!name || !photo || !email) {
-            throw new Error("Please provide name, photo, and email");
-        }
-        if (!/@/.test(email) || email.length < 4) {
-            throw new Error("Please provide a valid email address");
-        }
-
-        const emailExists = this.users.some((user) => user.email === email);
-        if (emailExists) {
-            throw new Error("The email is already registered");
-        }
-
         const newUser = {
             id: crypto.randomBytes(12).toString("hex"),
             name,
             photo,
             email,
         };
-
         this.users.push(newUser);
         fs.writeFileSync(this.path, JSON.stringify(this.users, null, 2));
 
         return newUser;
     } catch (error) {
         console.error(error.message);
-        return error;
+        throw error
     }
 }
 
@@ -56,7 +43,7 @@ class UserManager {
       const parsedData = JSON.parse(fileData)
       return parsedData
     } catch (error) {
-      error.message;
+      throw error
     }
   }
   async readOne(id) {
@@ -65,20 +52,24 @@ class UserManager {
         const parsedData = JSON.parse(fileData)
         const one = parsedData.find(x => x.id === id)
         if (!one) {
-            throw new Error("user not found");
+            const notFoundError = new Error("user not found");
+            notFoundError.statusCode = 400
+            throw notFoundError
         } else {
             return one;
         }
     } catch (error) {
         console.error(error.message);
-        return error.message;
+        throw error
     }
   }
   async destroy(id) {
     try {
       let one = this.users.find(x => x.id === id)
       if (!one) {
-        throw new Error("there is not any user with id " + id)
+        const notIdError = new Error("there is not any user with id " + id)
+        notIdError.statusCode = 400
+        throw notIdError
       } else {
         this.users = this.users.filter(x => x.id !== id)
         const jsonData = JSON.stringify(this.users, null, 2)
@@ -87,27 +78,33 @@ class UserManager {
       }
     } catch (error) {
       console.error(error.message)
-      return error.message
+      throw error
     }
   }
   async update(id, data) {
     try {
       let userToUpdateIndex = this.users.findIndex((user) => user.id === id);
       if (userToUpdateIndex === -1) {
-        throw new Error(`there's not any user with id: ${id}`);
+        const notIdError = new Error(`there's not any user with id: ${id}`);
+        notIdError.statusCode = 400
+        throw notIdError
       }
 
       const { name, photo, email } = data;
 
       if (!name || !photo || !email || !/@/.test(email) || email.length < 4) {
-        throw new Error("enter all fields correctly");
+        const notFieldComplete = new Error("enter all fields correctly");
+        notFieldComplete.statusCode = 400
+        throw notFieldComplete
       }
 
       const emailExists = this.users.some(
         (user) => user.email === email && user.id !== id
       );
       if (emailExists) {
-        throw new Error("the email is already used by other user");
+        const emailExistsError = new Error("the email is already used by other user");
+        emailExistsError.statusCode = 400
+        throw emailExistsError
       }
       this.users[userToUpdateIndex].id = id
       this.users[userToUpdateIndex].name = name;
@@ -119,7 +116,7 @@ class UserManager {
       return this.users[userToUpdateIndex];
     } catch (error) {
       console.error(error.message);
-      return error.message;
+      throw error
     }
   }
 }

@@ -19,20 +19,12 @@ productsRouter.post("/", propsProducts, async (req, res, next) => {
 
 productsRouter.get("/", async (req, res, next) => {
   try {
-    const all = await product.read();
-    if (Array.isArray(all)) {
+    const response = await product.read();
       return res.json({
         statusCode: 200,
         success: true,
-        response: all,
+        response
       });
-    } else {
-      return res.json({
-        statusCode: 404,
-        success: false,
-        message: "not found",
-      });
-    }
   } catch (error) {
     return next(error)
   }
@@ -41,19 +33,12 @@ productsRouter.get("/", async (req, res, next) => {
 productsRouter.get("/:pid", async (req, res, next) => {
   try {
     const { pid } = req.params;
-    const one = await product.readOne(pid);
-    if (typeof one === "string") {
-      return res.json({
-        statusCode: 404,
-        message: one,
-      });
-    } else {
+    const response = await product.readOne(pid);
       return res.json({
         statusCode: 200,
         success: true,
-        response: one,
+        response
       });
-    } 
   } catch (error) {
     return next(error)
   }
@@ -65,18 +50,10 @@ productsRouter.put('/:pid', async (req, res, next) => {
     const data = req.body;
 
     const response = await product.update(pid, data);
-
-    if (response instanceof Error) {
-      return res.json({
-        statusCode: 400,
-        message: response.message,
-      });
-    } else {
       return res.json({
         statusCode: 200,
         response,
       });
-    }
   } catch (error) {
     return next(error)
   }
@@ -86,17 +63,10 @@ productsRouter.delete('/:pid', async (req, res, next) => {
   try {
     const { pid } = req.params;
     const response = await product.destroy(pid);
-    if (response instanceof Error) {
-      return res.status(400).json({
-        statusCode: 400,
-        message: response.message,
-      });
-    } else {
       return res.status(200).json({
         statusCode: 200,
-        message: 'Product deleted successfully',
+        response,
       });
-    }
   } catch (error) {
     return next(error)
   }

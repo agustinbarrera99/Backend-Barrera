@@ -47,7 +47,7 @@ class ProductManager {
       const parsedData = JSON.parse(fileData);
       return parsedData;
     } catch (error) {
-      error.message;
+      throw error
     }
   }
 
@@ -57,13 +57,15 @@ class ProductManager {
         const parsedData = JSON.parse(fileData)
         const one = parsedData.find(x => x.id === id)
         if (!one) {
-            throw new Error("product not found");
+          const notFoundError = new Error("Product not found");
+          notFoundError.statusCode = 400; 
+          throw notFoundError;
         } else {
             return one;
         }
     } catch (error) {
         console.error(error.message);
-        return error.message;
+        throw error
     }
   }
 
@@ -71,7 +73,9 @@ class ProductManager {
     try {
         const index = this.products.findIndex(x => x.id === id);
         if (index === -1) {
-            throw new Error("There is not any product with id " + id);
+            const notIdError = new Error("There is not any product with id " + id);
+            notIdError.statusCode = 400
+            throw notIdError
         } else {
             this.products.splice(index, 1);
             const jsonData = JSON.stringify(this.products, null, 2);
@@ -80,7 +84,7 @@ class ProductManager {
         }
     } catch (error) {
         console.error(error.message);
-        return new Error(error.message);
+        throw error
     }
 }
 
@@ -88,13 +92,17 @@ class ProductManager {
     try {
       let productToUpdateIndex = this.products.findIndex((product) => product.id === id);
       if (productToUpdateIndex === -1) {
-        throw new Error(`There is not any product with id: ${id}`);
+        const notIdError = new Error(`There is not any product with id: ${id}`);
+        notIdError.statusCode = 400
+        throw notIdError
       }
 
       const { title, photo, price, stock } = data;
 
       if (!title && !photo && !price && !stock) {
-        throw new Error("complete at least one field to update");
+        const notFieldComplete = new Error("complete at least one field to update");
+        notFieldComplete.statusCode = 400
+        throw notFieldComplete
       }
 
       if (title) {
@@ -102,11 +110,12 @@ class ProductManager {
           (product) => product.title === title && product.id !== id
         );
         if (productWithTitleExists) {
-          throw new Error("the product already exist");
+          const productExists = new Error("the product already exist");
+          productExists.statusCode = 400
+          throw productExists
         }
         this.products[productToUpdateIndex].title = title;
       }
-
       if (photo) {
         this.products[productToUpdateIndex].photo = photo;
       }
@@ -124,7 +133,7 @@ class ProductManager {
       return this.products[productToUpdateIndex];
     } catch (error) {
       console.error(error.message);
-      return error.message;
+      throw error
     }
   }
 }

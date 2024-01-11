@@ -28,20 +28,12 @@ ordersRouter.post("/", async (req, res, next) => {
 
 ordersRouter.get("/", async (req, res, next) => {
   try {
-    const all = await orders.read();
-    if (Array.isArray(all)) {
+    const response = await orders.read();
       return res.json({
         statusCode: 200,
         success: true,
-        response: all,
+        response
       });
-    } else {
-      return res.json({
-        statusCode: 404,
-        success: false,
-        message: all.message,
-      });
-    }
   } catch (error) {
     return next(error)
   }
@@ -50,20 +42,28 @@ ordersRouter.get("/", async (req, res, next) => {
 ordersRouter.get("/:uid", async(req, res, next) => {
   try {
     const { uid } = req.params;
-    const one = await orders.readOne(uid);
-    if (typeof one === "string") {
-      return res.json({
-        statusCode: 404,
-        message: one,
-      });
-    } else {
+    const response = await orders.readOne(uid);
       return res.json({
         statusCode: 200,
         success: true,
-        response: one,
+        response
       });
-    }
   } catch (error) {
     return next(error)
   }
 });
+
+
+ordersRouter.delete("/:oid", async(req, res, next) => {
+  try {
+    const { oid } = req.params
+    const response = await orders.destroy(oid)
+    return res.json({
+      statusCode: 200,
+      success: true,
+      response
+    })
+  } catch (error) {
+    return next(error)
+  }
+})

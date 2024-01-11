@@ -27,20 +27,26 @@ class OrdersManager {
       const { uid, pid, quantity, state } = data;
   
       if (!uid || !pid || !quantity || !state) {
-        throw new Error("Enter all necessary data (uid, pid, quantity, state)");
+        const notDataError =  new Error("Enter all necessary data (uid, pid, quantity, state)");
+        notDataError.statusCode = 400
+        throw notDataError
       }
 
       const users = JSON.parse(fs.readFileSync(this.pathToUsers, "utf-8"));
       const userExists = users.some((user) => user.id === uid);
       if (!userExists) {
-        throw new Error(`There is not any user with ID: ${uid}`);
+        const notUserIdError = new Error(`There is not any user with ID: ${uid}`);
+        notUserIdError.statusCode = 400
+        throw notIdError
       }
       const products = JSON.parse(
         fs.readFileSync(this.pathToProducts, "utf-8")
       );
       const productExists = products.some((product) => product.id === pid);
       if (!productExists) {
-        throw new Error(`There is not any product with ID: ${pid}`);
+        const notProductIdError = new Error(`There is not any product with ID: ${pid}`);
+        notProductIdError.statusCode = 400
+        throw notProductIdError
       }
 
       const newOrder = {
@@ -57,19 +63,21 @@ class OrdersManager {
       return newOrder;
     } catch (error) {
       console.error(error.message);
-      return error;
+      throw error
     }
   }
 
   async read() {
     try {
       if(this.orders.length === 0) {
-        throw new Error("there are not orders")
+        const notOrderError = new Error("there are not orders")
+        notOrderError.statusCode = 400
+        throw notOrderError
       }
       return this.orders;
     } catch (error) {
       console.error(error.message);
-      return error
+      throw error
     }
   }
 
@@ -79,12 +87,14 @@ class OrdersManager {
       const userOrders = orders.filter((order) => order.uid === uid)
   
       if (userOrders.length === 0) {
-        throw new Error(`the user with id: ${uid} doesn't have orders`);
+        const notOrderError = new Error(`the user with id: ${uid} doesn't have orders`);
+        notOrderError.statusCode = 400
+        throw notOrderError
       }
       return userOrders;
     } catch (error) {
       console.error(error.message);
-      return error.message
+      throw error
     }
   }
 
@@ -92,7 +102,9 @@ class OrdersManager {
     try {
       const orderToUpdate = this.orders.find((order) => order.oid === oid);
       if (!orderToUpdate) {
-        throw new Error(`No order found with ID ${oid}`);
+        const notOrderError = new Error(`No order found with ID ${oid}`);
+        notOrderError.statusCode = 400
+        throw notOrderError
       }
 
       if (quantity !== undefined) {
@@ -107,7 +119,7 @@ class OrdersManager {
       return orderToUpdate;
     } catch (error) {
       console.error(error.message);
-      return error.message;
+      throw error
     }
   }
 
@@ -116,14 +128,16 @@ class OrdersManager {
       const initialLength = this.orders.length;
       this.orders = this.orders.filter((order) => order.oid !== oid);
       if (this.orders.length === initialLength) {
-        throw new Error(`No order found with ID ${oid}`);
+        const notOrderError = new Error(`No order found with ID ${oid}`);
+        notOrderError.statusCode = 400
+        throw notOrderError
       }
 
       fs.writeFileSync(this.pathToOrders, JSON.stringify(this.orders, null, 2));
       return oid;
     } catch (error) {
       console.error(error.message);
-      return error.message;
+      throw error
     }
   }
 }

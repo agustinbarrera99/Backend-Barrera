@@ -12,12 +12,5 @@
     "pid": "227b24e3b69a7445f0c43657",
     "quantity": 1,
     "state": "reserved"
-  },
-  {
-    "oid": "a94a69127f9ecdb74a620444",
-    "uid": "84103ab4b7bb9491311f7e8f",
-    "pid": "227b24e3b69a7445f0c43657",
-    "quantity": 5,
-    "state": "reserved"
   }
 ]
