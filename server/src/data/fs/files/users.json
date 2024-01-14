@@ -1,0 +1,20 @@
+[
+  {
+    "id": "f348594d7fa6a7498e1fcbaa",
+    "name": "lucas",
+    "photo": "url",
+    "email": "lucas@mail"
+  },
+  {
+    "id": "ba504bcb7d11f84a94c96dfb",
+    "name": "agustin",
+    "photo": "url",
+    "email": "agustin@coder"
+  },
+  {
+    "id": "6ed1068f5c0f9bb5922a1eac",
+    "name": "juan",
+    "photo": "url",
+    "email": "juan@coder"
+  }
+]

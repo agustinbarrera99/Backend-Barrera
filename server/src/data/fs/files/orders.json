@@ -1,0 +1,16 @@
+[
+  {
+    "oid": "7e00e049d6602108cf128c7a",
+    "uid": "f348594d7fa6a7498e1fcbaa",
+    "pid": "26bb8eef05a29cce7b95b828",
+    "quantity": 2,
+    "state": "reserved"
+  },
+  {
+    "oid": "26ef2a656b92dfd656bfd671",
+    "uid": "84103ab4b7bb9491311f7e8f",
+    "pid": "227b24e3b69a7445f0c43657",
+    "quantity": 1,
+    "state": "reserved"
+  }
+]
