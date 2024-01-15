@@ -1,0 +1,53 @@
+<div class="card m-auto my-5">
+  <div class="card-header">
+    <div class="text-header">Create product</div>
+  </div>
+  <div class="card-body">
+    <form action="#">
+      <div class="form-group">
+        <label for="username">title:</label>
+        <input
+          required=""
+          class="form-control"
+          name="title"
+          id="title"
+          type="text"
+        />
+      </div>
+      <div class="form-group">
+        <label for="number">price:</label>
+        <input
+          required=""
+          class="form-control"
+          name="price"
+          id="price"
+          type="number"
+        />
+      </div>
+      <div class="form-group">
+        <label for="stock">stock:</label>
+        <input
+          required=""
+          class="form-control"
+          name="stock"
+          id="stock"
+          type="number"
+        />
+      </div>
+      <div class="form-group">
+        <label for="photo">Photo</label>
+        <input
+          required=""
+          class="form-control"
+          name="photo"
+          id="photo"
+          type="text"
+        />
+      </div>
+      <input type="submit" class="btn" value="submit" id="createProduct"/>
+    </form>
+  </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/form.js"></script>
