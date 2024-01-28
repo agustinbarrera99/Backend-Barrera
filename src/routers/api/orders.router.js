@@ -1,5 +1,6 @@
 import { Router } from "express";
-import orders from "../../data/fs/orders.fs.js";
+// import orders from "../../data/fs/orders.fs.js";
+import { orders } from "../../data/mongo/manager.mongo.js";
 
 const ordersRouter = Router();
 
@@ -53,6 +54,19 @@ ordersRouter.get("/:uid", async(req, res, next) => {
   }
 });
 
+ordersRouter.put("/:oid", async (req, res, next) => {
+  try {
+    const { oid } = req.params
+    const data = req.body
+    const response = await orders.update(oid, data)
+    return res.json({
+      statusCode: 200,
+      response
+    })
+  } catch (error) {
+    return next(error)
+  }
+})
 
 ordersRouter.delete("/:oid", async(req, res, next) => {
   try {

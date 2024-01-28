@@ -1,13 +1,13 @@
 import { Router } from "express";
-import product from "../../data/fs/product.fs.js";
-import propsProducts from "../../middlewares/propsProducts.mid.js";
+// import product from "../../data/fs/product.fs.js";
+import { products } from "../../data/mongo/manager.mongo.js";
 
 const productsRouter = Router();
 
-productsRouter.post("/", propsProducts, async (req, res, next) => {
+productsRouter.post("/", async (req, res, next) => {
   try {
     const data = req.body;
-    const response = await product.create(data);
+    const response = await products.create(data);
       return res.json({
         statusCode: 201,
         response,
@@ -19,7 +19,7 @@ productsRouter.post("/", propsProducts, async (req, res, next) => {
 
 productsRouter.get("/", async (req, res, next) => {
   try {
-    const response = await product.read();
+    const response = await products.read();
       return res.json({
         statusCode: 200,
         success: true,
@@ -33,7 +33,7 @@ productsRouter.get("/", async (req, res, next) => {
 productsRouter.get("/:pid", async (req, res, next) => {
   try {
     const { pid } = req.params;
-    const response = await product.readOne(pid);
+    const response = await products.readOne(pid);
       return res.json({
         statusCode: 200,
         success: true,
@@ -49,7 +49,7 @@ productsRouter.put('/:pid', async (req, res, next) => {
     const { pid } = req.params;
     const data = req.body;
 
-    const response = await product.update(pid, data);
+    const response = await products.update(pid, data);
       return res.json({
         statusCode: 200,
         response,
@@ -62,8 +62,8 @@ productsRouter.put('/:pid', async (req, res, next) => {
 productsRouter.delete('/:pid', async (req, res, next) => {
   try {
     const { pid } = req.params;
-    const response = await product.destroy(pid);
-      return res.status(200).json({
+    const response = await products.destroy(pid);
+      return res.json({
         statusCode: 200,
         response,
       });

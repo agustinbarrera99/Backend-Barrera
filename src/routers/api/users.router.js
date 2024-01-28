@@ -1,13 +1,13 @@
 import { Router } from "express";
-import user from "../../data/fs/user.fs.js";
-import propsUsers from "../../middlewares/propsUsers.mid.js";
+// import user from "../../data/fs/user.fs.js";
+import { users } from "../../data/mongo/manager.mongo.js";
 
 const usersRouter = Router();
 
-usersRouter.post("/", propsUsers, async (req, res, next) => {
+usersRouter.post("/", async (req, res, next) => {
   try {
     const data = req.body;
-    const response = await user.create(data);
+    const response = await users.create(data);
       return res.json({
         statusCode: 201,
         response,
@@ -19,7 +19,7 @@ usersRouter.post("/", propsUsers, async (req, res, next) => {
 
 usersRouter.get("/", async (req, res, next) => {
   try {
-    const response = await user.read();
+    const response = await users.read();
       return res.json({
         statusCode: 200,
         success: true,
@@ -33,21 +33,50 @@ usersRouter.get("/", async (req, res, next) => {
 usersRouter.get("/:uid", async (req, res, next) => {
   try {
     const { uid } = req.params;
-    const response = await user.readOne(uid);
+    const response = await users.readOne(uid);
       return res.json({
         statusCode: 200,
         success: true,
-        response: response,
+        response,
       });
   } catch (error) {
     return next(error)
   }
 });
 
+usersRouter.get("/email/:email", async (req, res, next) => {
+  try {
+    const {email} = req.params
+    const response = await users.readByEmail(email)
+    return res.json({
+      statusCode: 200,
+      response,
+    })
+
+  } catch (error) {
+    return next(error)
+  }
+})
+
+usersRouter.put("/:uid", async (req, res, next) => {
+  try {
+    const { uid } = req.params
+    const data = req.body
+    const response = await users.update(uid, data)
+    return res.json({
+      statusCode: 200,
+      success: true,
+      response
+    })
+  } catch (error) {
+    return next(error)
+  }
+})
+
 usersRouter.delete("/:uid", async (req, res, next) => {
   try {
     const { uid } = req.params
-    const response = await user.destroy(uid)
+    const response = await users.destroy(uid)
     return res.json({
         statusCode: 200,
         success: true,

@@ -1,17 +1,78 @@
-# Estructura del Servidor
+## Servidor Express con Operaciones CRUD
+Este proyecto es una implementación de un servidor Express que proporciona operaciones CRUD para tres recursos: productos, usuarios y pedidos. El servidor admite varios mecanismos de almacenamiento de datos, incluyendo en memoria, sistema de archivos y MongoDB. Además, incorpora middlewares esenciales y manejo de errores.
 
-### El servidor debe estar correctamente estructurado para manejar las funcionalidades del comercio online. Se debe utilizar el motor de plantillas Handlebars para desarrollar las vistas.
+## Endpoints de la API
 
-#### Vistas con Handlebars
+### Productos
 
-1. localhost:8080: Muestra la página de inicio del comercio, que debe incluir como mínimo el logo del comercio y la lista de todos los productos que se venden.
+Crear Producto:
 
-2. localhost:8080/real: Muestra la página con todos los productos y debe actualizarse en tiempo real utilizando Handlebars y sockets.
+POST /api/products
+Cuerpo: Datos JSON para el nuevo producto
+Obtener Todos los Productos:
 
-3. localhost:8080/form: Muestra la página con un formulario en tiempo real para crear un nuevo producto utilizando Handlebars y sockets.
+GET /api/products
+Obtener un Producto:
 
-4. localhost:8080/register: Muestra la página con un formulario para registrar un usuario. No es necesario implementar funcionalidades de fetch, solo utilizar Handlebars.
+GET /api/products/:pid
+Parámetros: pid - ID del producto
+Actualizar Producto:
 
-#### Sockets
-##### Se debe implementa un servidor TCP con sockets para la comunicación en tiempo real entre el back y el front. 
+PUT /api/products/:pid
+Parámetros: pid - ID del producto
+Cuerpo: Datos JSON actualizados para el producto
+Eliminar Producto:
+
+DELETE /api/products/:pid
+Parámetros: pid - ID del producto
+
+### Usuarios
+Crear Usuario:
+
+POST /api/users
+Cuerpo: Datos JSON para el nuevo usuario
+Obtener Todos los Usuarios:
+
+GET /api/users
+Obtener un Usuario:
+
+GET /api/users/:uid
+Parámetros: uid - ID del usuario
+Obtener Usuario por Email:
+
+GET /api/users/email/:email
+Parámetros: email - Correo electrónico del usuario
+Actualizar Usuario:
+
+PUT /api/users/:uid
+Parámetros: uid - ID del usuario
+Cuerpo: Datos JSON actualizados para el usuario
+Eliminar Usuario:
+
+DELETE /api/users/:uid
+Parámetros: uid - ID del usuario
+
+### Orders
+Crear Pedido:
+
+POST /api/orders
+Cuerpo: Datos JSON para el nuevo pedido
+Obtener Todos los Pedidos:
+
+GET /api/orders
+Obtener un Pedido:
+
+GET /api/orders/:oid
+Parámetros: oid - ID del pedido
+Actualizar Pedido:
+
+PUT /api/orders/:oid
+Parámetros: oid - ID del pedido
+Cuerpo: Datos JSON actualizados para el pedido
+Eliminar Pedido:
+
+DELETE /api/orders/:oid
+Parámetros: oid - ID del pedido
+
+
 
