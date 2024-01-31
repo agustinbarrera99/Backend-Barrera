@@ -19,7 +19,7 @@ productsRouter.post("/", async (req, res, next) => {
 
 productsRouter.get("/", async (req, res, next) => {
   try {
-    const response = await products.read();
+    const response = await products.read({});
       return res.json({
         statusCode: 200,
         success: true,

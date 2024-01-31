@@ -16,9 +16,9 @@ class MongoManager {
       throw error;
     }
   }
-  async read() {
+  async read({filter, order}) {
     try {
-      const all = await this.model.find()
+      const all = await this.model.find(filter).sort(order)
       if (all.lenth === 0) {
         const error = new Error("there is not any document");
         error.statusCode = 404;
@@ -70,6 +70,19 @@ class MongoManager {
       return one
     } catch (error) {
       handleCastError(error)
+      throw error
+    }
+  }
+
+  async stats({filter}) {
+    try {
+      let stats = await this.model.find(filter).explain("executionStats")
+      stats = {
+        quantity: stats.executionStats.nReturned,
+        time: stats.executionStats.executionTimeMillis
+      }
+      return stats
+    } catch (error) {
       throw error
     }
   }
