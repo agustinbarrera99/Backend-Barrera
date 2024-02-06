@@ -1,6 +1,5 @@
 import "dotenv/config.js"
 import express from "express";
-import { createServer } from "http";
 import { Server } from "socket.io";
 import router from "./src/routers/index.router.js";
 import errorHandler from "./src/middlewares/errorHandler.mid.js";
@@ -20,22 +19,7 @@ const ready = () => {
   dbConnection()
 };
 
-const httpServer = createServer(server);
-const socketServer = new Server(httpServer);
-httpServer.listen(PORT, ready);
-
-socketServer.on("connection", async (socket) => {
-  console.log(socket.id);
-  socket.emit("products", await product.read());
-  socket.on("newProduct", async (data) => {
-    try {
-      await product.create(data);
-    } catch (error) {
-      console.error(error);
-    }
-  });
-  socket.emit("products", await product.read());
-});
+server.listen(PORT, ready);
 
 server.engine("handlebars", engine());
 server.set("view engine", "handlebars");

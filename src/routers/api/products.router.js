@@ -19,7 +19,19 @@ productsRouter.post("/", async (req, res, next) => {
 
 productsRouter.get("/", async (req, res, next) => {
   try {
-    const response = await products.read({});
+    const sortAndPaginate = {
+      limit: req.query.limit || 10,
+      page: req.query.page || 1,
+      sort: { title: 1 }
+    }
+
+    const filter = {}
+
+    if(req.query.title) {
+      filter.title = new RegExp(req.query.title.trim(), 'i')
+    }
+
+    const response = await products.read({filter, sortAndPaginate});
       return res.json({
         statusCode: 200,
         success: true,
