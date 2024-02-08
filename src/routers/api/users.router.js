@@ -19,7 +19,20 @@ usersRouter.post("/", async (req, res, next) => {
 
 usersRouter.get("/", async (req, res, next) => {
   try {
-    const response = await users.read({});
+
+    const sortAndPaginate = {
+      limit: req.query.limit || 10,
+      page: req.query.page || 1,
+      sort: { email: 1 }
+    }
+
+    const filter = {}
+
+    if(req.query.email) {
+      filter.email = new RegExp(req.query.email.trim(), 'i')
+    }
+
+    const response = await users.read({filter, sortAndPaginate});
       return res.json({
         statusCode: 200,
         success: true,

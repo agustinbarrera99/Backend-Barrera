@@ -1,4 +1,5 @@
 import { model, Schema, Types } from "mongoose";
+import mongoosePaginate from "mongoose-paginate-v2"
 
 const collection = "orders"
 
@@ -11,7 +12,8 @@ const schema = new Schema({
 {timestamps: true})
 
 schema.pre("find", function() { this.populate("user_id", "name, email") })
-schema.pre("find", function() { this.populate("product_id", "name, email") })
+schema.pre("find", function() { this.populate("product_id", "price") })
 
+schema.plugin(mongoosePaginate)
 const Order = model(collection, schema)
 export default Order
