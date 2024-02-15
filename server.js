@@ -1,14 +1,15 @@
 import "dotenv/config.js"
 import express from "express";
-import { Server } from "socket.io";
 import router from "./src/routers/index.router.js";
 import errorHandler from "./src/middlewares/errorHandler.mid.js";
 import pathHandler from "./src/middlewares/pathHandler.mid.js";
 import __dirname from "./utils.js";
 import morgan from "morgan";
 import { engine } from "express-handlebars";
-import product from "./src/data/fs/product.fs.js";
 import dbConnection from "./src/utils/dbConnection.js";
+import cookieParser from "cookie-parser";
+import expressSession from "express-session"
+import MongoStore from "connect-mongo";
 
 const server = express();
 
@@ -19,11 +20,22 @@ const ready = () => {
   dbConnection()
 };
 
-server.listen(PORT, ready);
-
 server.engine("handlebars", engine());
 server.set("view engine", "handlebars");
-server.set("views", __dirname + "/src/views/");
+server.set("views", __dirname + "/src/views");
+
+server.listen(PORT, ready);
+
+server.use(cookieParser(process.env.SECRET_KEY))
+server.use(expressSession({
+  secret: process.env.SECRET_KEY,
+  resave: true,
+  saveUninitialized: true,
+  store: new MongoStore({
+    ttl: 7 * 24 * 60 * 60,
+    mongoUrl: process.env.DB_LINK
+  }),
+}))
 
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
