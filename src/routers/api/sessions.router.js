@@ -21,9 +21,10 @@ sessionsRouter.post("/register", has8chars, async (req, res, next) => {
 sessionsRouter.post("/login", isValidPassMid, async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    if (email && password === "hola1234") {
+    if (email && password) {
       req.session.email = email;
-      req.session.role = 2;
+      const one = await users.readByEmail(email)
+      req.session.role = one.role;
       return res.json({
         statusCode: 200,
         message: "logged in",
