@@ -12,4 +12,7 @@ export const verifyToken = (token) => {
     const data = jwt.verify(token, process.env.SECRET)
     return data
   } 
+  const error = new Error("bad auth token")
+  error.statusCode = 401
+  throw error
 };
