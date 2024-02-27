@@ -1,16 +1,19 @@
 import { Router } from "express";
 // import product from "../../data/fs/product.fs.js";
 import { products } from "../../data/mongo/manager.mongo.js";
-// import isAdmin from "../../middlewares/isAdmin.mid.js";
+import isAdmin from "../../middlewares/isAdmin.mid.js";
+import { isAuth } from "../../middlewares/isAuth.js";
+import passport from "../../middlewares/passport.mid.js";
 
 const productsRouter = Router();
 
-productsRouter.post("/", async (req, res, next) => {
+productsRouter.post("/", passport.authenticate("jwt", {session: false}),isAdmin, async (req, res, next) => {
   try {
     const data = req.body;
     const response = await products.create(data);
       return res.json({
         statusCode: 201,
+        message: "product created!",
         response,
       });
   } catch (error) {
@@ -20,26 +23,26 @@ productsRouter.post("/", async (req, res, next) => {
 
 productsRouter.get("/", async (req, res, next) => {
   try {
-    const sortAndPaginate = {
-      limit: req.query.limit || 10,
+    const options = {
+      limit: req.query.limit || 20,
       page: req.query.page || 1,
-      sort: { title: 1 }
+      sort: { title: 1 },
+      lean: true
+    };
+    const filter = {};
+    if (req.query.title) {
+      filter.title = new RegExp(req.query.title.trim(), "i");
     }
-
-    const filter = {}
-
-    if(req.query.title) {
-      filter.title = new RegExp(req.query.title.trim(), 'i')
+    if (req.query.sort === "desc") {
+      options.sort.title = "desc";
     }
-
-    const response = await products.read({filter, sortAndPaginate});
-      return res.json({
-        statusCode: 200,
-        success: true,
-        response
-      });
+    const all = await products.read({ filter, options });
+    return res.json({
+      statusCode: 200,
+      response: all,
+    });
   } catch (error) {
-    return next(error)
+    return next(error);
   }
 });
 
