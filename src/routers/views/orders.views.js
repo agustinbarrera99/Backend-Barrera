@@ -18,10 +18,34 @@ ordersRouter.get("/", passCallbackMid("jwt"), async (req, res, next) => {
       user_id: user._id,
     };
     const all = await orders.read({ filter, options });
+
+    const userRole = req.cookies.token ? verifyToken(req.cookies.token) : null;
+    console.log(user);
+
+    const r = (u) => {
+      if (u && u.role === 0) {
+        return { usuarioComun: true, admin: false };
+      } else if (u && u.role === 1) {
+        return { usuarioComun: false, admin: true };
+      } else {
+        return { usuarioComun: false, admin: false };
+      }
+    };
+
     if (all.docs.length >= 1) {
-      return res.render("orders", { title: "MY CART", orders: all.docs });
+      return res.render("orders", { 
+        title: "MY CART", orders: all.docs,
+        user: userRole,
+        usuarioComun: r(userRole),
+        admin: r(userRole)
+      });
     } else {
-      return res.render("emptyCart")
+      return res.render("emptyCart", {
+        title: "MY CART", orders: all.docs,
+        user: userRole,
+        usuarioComun: r(userRole),
+        admin: r(userRole)
+      })
     }
   } catch (error) {
       return next(error)
