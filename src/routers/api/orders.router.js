@@ -1,6 +1,10 @@
 import { Router } from "express";
 // import orders from "../../data/fs/orders.fs.js";
 import { orders } from "../../data/mongo/manager.mongo.js";
+import {isAuth} from "../../middlewares/isAuth.js"
+import { ObjectId } from "mongoose";
+import { verifyToken } from "../../utils/token.util.js";
+import { users } from "../../data/mongo/manager.mongo.js";
 
 const ordersRouter = Router();
 
@@ -19,37 +23,22 @@ ordersRouter.post("/", async (req, res, next) => {
   }
 });
 
-ordersRouter.get("/", async(req, res, next) => {
+ordersRouter.get("/", isAuth, async (req, res, next) => {
   try {
-    const filter = {}
-
-    const sortAndPaginate = {
-      limit: req.query.limit || 10,
-      page: req.query.page || 1,
-    }
-
-    const response = await orders.read({filter, sortAndPaginate})
+    const token = req.cookies.token
+    const userData = verifyToken(token)
+    const user = await users.readByEmail(userData.email)
+    console.log(user)
+    const filter = {
+      user_id: user._id
+    };
+    const all = await orders.read({ filter });
     return res.json({
       statusCode: 200,
-      response
-    })
+      response: all,
+    });
   } catch (error) {
-    next(error)
-  }
-})
-
-ordersRouter.get("/:uid", async (req, res, next) => {
-  try {
-    const {uid} = req.params
-    const filter = {user_id: uid}
-    const response = await orders.read(filter);
-      return res.json({
-        statusCode: 200,
-        success: true,
-        response
-      });
-  } catch (error) {
-    return next(error)
+    return next(error);
   }
 });
 

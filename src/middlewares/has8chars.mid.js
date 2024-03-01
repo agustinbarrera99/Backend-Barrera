@@ -4,6 +4,7 @@ const has8chars = (req, res, next) => {
     try {        
         const { password } = req.body
         has8charUtil(password)
+        return next()
     } catch (error) {
         return next(error)
     }

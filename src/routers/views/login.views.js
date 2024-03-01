@@ -1,14 +1,30 @@
 import { Router } from "express";
 
-const loginRouter = Router()
+const loginRouter = Router();
 
 loginRouter.get("/", (req, res, next) => {
-    try {
-        return res.render("login")
-    } catch (error) {
-        next(error)
-    }
-})
+  try {
+    const user = req.cookies.token ? verifyToken(req.cookies.token) : null;
+    console.log(user);
 
+    const r = (u) => {
+      if (u && u.role === 0) {
+        return { usuarioComun: true, admin: false };
+      } else if (u && u.role === 1) {
+        return { usuarioComun: false, admin: true };
+      } else {
+        return { usuarioComun: false, admin: false };
+      }
+    };
 
-export default loginRouter
+    return res.render("login", {
+      user: user,
+      usuarioComun: r(user),
+      admin: r(user)
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+export default loginRouter;

@@ -18,14 +18,9 @@ class MongoManager {
     }
   }
 
-  async read({ filter, sortAndPaginate }) {
+  async read({ filter, options }) {
     try {
-      const all = await this.model.paginate(filter, sortAndPaginate);
-      if (all.totalDocs === 0) {
-        const error = new Error("there is not any document");
-        error.statusCode = 404;
-        throw error;
-      }
+      const all = await this.model.paginate(filter, options);
       return all;
     } catch (error) {
       throw error;
@@ -46,7 +41,6 @@ class MongoManager {
   async readByEmail(email) {
     try {
       const one = await this.model.findOne({ email });
-      notFoundOne(one);
       return one;
     } catch (error) {
       throw error;
