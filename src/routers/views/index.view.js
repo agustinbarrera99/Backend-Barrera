@@ -14,7 +14,7 @@ class ViewsRouter extends CustomRouter {
     this.router.use("/auth/register", registerRouter);
     this.router.use("/products/form", isAuth, isAdmin, productsFormRouter);
     this.router.use("/orders", isAuth, ordersRouter)
-    this.read("/", async (req, res, next) => {
+    this.read("/", ["PUBLIC"],async (req, res, next) => {
       try {
         const options = {
           limit: parseInt(req.query.limit) || 10,
