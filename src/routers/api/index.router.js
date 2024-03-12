@@ -1,16 +1,23 @@
-import { Router } from "express";
-import usersRouter from "./users.router.js";
-import productsRouter from "./products.router.js";
-import ordersRouter from "./orders.router.js";
-import sessionsRouter from "./sessions.router.js";
+import CustomRouter from "../CustomRouter.js";
 import passport from "../../middlewares/passport.mid.js";
+import ProductsRouter from "./products.router.js";
+import SessionsRouter from "./sessions.router.js";
+import OrdersRouter from "./orders.router.js";
+import UsersRouter from "./users.router.js";
 
-const apiRouter = Router()
+const product = new ProductsRouter()
+const session = new SessionsRouter()
+const order = new OrdersRouter()
+const user = new UsersRouter()
 
-apiRouter.use("/users", usersRouter)
-apiRouter.use("/products", productsRouter)
-apiRouter.use("/orders", ordersRouter)
-apiRouter.use("/sessions", sessionsRouter)
 
-export default apiRouter
+class ApiRouter extends CustomRouter {
+  init() {
+    this.router.use("/users", user.getRouter());
+    this.router.use("/products", product.getRouter());
+    this.router.use("/orders", order.getRouter());
+    this.router.use("/sessions", session.getRouter());
+  }
+}
 
+export default ApiRouter;

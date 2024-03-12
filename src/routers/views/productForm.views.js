@@ -3,7 +3,7 @@ import { verifyToken } from "../../utils/token.util.js";
 
 const productsFormRouter = Router();
 
-productsFormRouter.get("/", (req, res, next) => {
+productsFormRouter.get("/",(req, res, next) => {
   try {
     const user = req.cookies.token ? verifyToken(req.cookies.token) : null;
     console.log(user);
