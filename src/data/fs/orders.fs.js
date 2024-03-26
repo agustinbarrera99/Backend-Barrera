@@ -31,9 +31,8 @@ class OrdersManager {
         notDataError.statusCode = 400
         throw notDataError
       }
-
       const users = JSON.parse(fs.readFileSync(this.pathToUsers, "utf-8"));
-      const userExists = users.some((user) => user.id === uid);
+      const userExists = users.some((user) => user._id === uid);
       if (!userExists) {
         const notUserIdError = new Error(`There is not any user with ID: ${uid}`);
         notUserIdError.statusCode = 400
@@ -42,13 +41,12 @@ class OrdersManager {
       const products = JSON.parse(
         fs.readFileSync(this.pathToProducts, "utf-8")
       );
-      const productExists = products.some((product) => product.id === pid);
+      const productExists = products.some((product) => product._id === pid);
       if (!productExists) {
         const notProductIdError = new Error(`There is not any product with ID: ${pid}`);
         notProductIdError.statusCode = 400
         throw notProductIdError
       }
-
       const newOrder = {
         oid: crypto.randomBytes(12).toString("hex"),
         uid,
@@ -74,7 +72,8 @@ class OrdersManager {
         notOrderError.statusCode = 400
         throw notOrderError
       }
-      return this.orders;
+      const all = this.orders;
+      return all
     } catch (error) {
       console.error(error.message);
       throw error
@@ -84,7 +83,7 @@ class OrdersManager {
   async readOne(uid) {
     try {
       const orders = JSON.parse(fs.readFileSync(this.pathToOrders, "utf-8"))
-      const userOrders = orders.filter((order) => order.uid === uid)
+      const userOrders = orders.filter((order) => order._id === uid)
   
       if (userOrders.length === 0) {
         const notOrderError = new Error(`the user with id: ${uid} doesn't have orders`);
@@ -125,19 +124,19 @@ class OrdersManager {
 
   destroy(oid) {
     try {
-      const initialLength = this.orders.length;
-      this.orders = this.orders.filter((order) => order.oid !== oid);
-      if (this.orders.length === initialLength) {
+      const index = this.orders.findIndex(order => order._id === oid);
+      if (index === -1) {
         const notOrderError = new Error(`No order found with ID ${oid}`);
-        notOrderError.statusCode = 400
-        throw notOrderError
+        notOrderError.statusCode = 404;
+        throw notOrderError;
       }
-
+      
+      const deletedOrder = this.orders.splice(index, 1)[0];
       fs.writeFileSync(this.pathToOrders, JSON.stringify(this.orders, null, 2));
-      return oid;
+      return deletedOrder;
     } catch (error) {
       console.error(error.message);
-      throw error
+      throw error;
     }
   }
 }
@@ -147,8 +146,5 @@ const orders = new OrdersManager(
   "./src/data/fs/files/products.json",
   "./src/data/fs/files/orders.json"
 );
-
-// orders.update("a94a69127f9ecdb74a620444", 5)
-// orders.destroy("a4a7cfa0861c99340f761315")
 
 export default orders;

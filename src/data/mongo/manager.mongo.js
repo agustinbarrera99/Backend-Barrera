@@ -1,7 +1,4 @@
 import handleCastError from "../../utils/handleCastError.js";
-import Product from "./models/product.model.js";
-import Order from "./models/order.model.js";
-import User from "./models/user.model.js";
 import notFoundOne from "../../utils/NotFoundOne.utils.js";
 import { Types } from "mongoose";
 import Comment from "./models/comment.model.js";
@@ -127,9 +124,4 @@ class MongoManager {
   }
 }
 
-const products = new MongoManager(Product);
-const users = new MongoManager(User);
-const orders = new MongoManager(Order);
-const comments = new MongoManager(Comment)
-
-export { products, users, orders, comments };
+export default MongoManager

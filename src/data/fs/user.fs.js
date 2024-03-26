@@ -1,5 +1,6 @@
 import fs from "fs"
 import crypto from "crypto"
+import notFoundOne from "../../utils/NotFoundOne.utils.js";
 
 class UserManager {
   constructor(path) {
@@ -37,24 +38,27 @@ class UserManager {
     }
 }
 
-  async read() {
-    try {
-      const fileData = await fs.promises.readFile(this.path, "utf-8")
-      const parsedData = JSON.parse(fileData)
-      return parsedData
-    } catch (error) {
-      throw error
+read({ filter, options }) {
+  try {
+    if (this.users.length === 0) {
+      const error = new Error("NOT FOUND!");
+      error.statusCode = 404;
+      throw error;
+    } else {
+      return this.users;
     }
+  } catch (error) {
+    throw error;
   }
+}
+
   async readOne(id) {
     try {
-        const fileData = await fs.promises.readFile(this.path, "utf-8")
-        const parsedData = JSON.parse(fileData)
-        const one = parsedData.find(x => x.id === id)
+        const one = this.users.find(x => x._id === id)
         if (!one) {
-            const notFoundError = new Error("user not found");
-            notFoundError.statusCode = 400
-            throw notFoundError
+            const error = new Error("user not found");
+            notFoundError.statusCode = 404
+            throw error
         } else {
             return one;
         }
@@ -63,71 +67,50 @@ class UserManager {
         throw error
     }
   }
-  async destroy(id) {
+
+  async readByEmail(email) {
     try {
-      let one = this.users.find(x => x.id === id)
+      const one = this.users.find(x => x.email === email)
       if (!one) {
-        const notIdError = new Error("there is not any user with id " + id)
-        notIdError.statusCode = 400
-        throw notIdError
+        return null
       } else {
-        this.users = this.users.filter(x => x.id !== id)
-        const jsonData = JSON.stringify(this.users, null, 2)
-        await fs.promises.writeFile(this.path, jsonData)
-        return id 
+        return one
       }
     } catch (error) {
-      console.error(error.message)
       throw error
     }
   }
-  async update(id, data) {
+
+  async destroy(id) {
     try {
-      let userToUpdateIndex = this.users.findIndex((user) => user.id === id);
-      if (userToUpdateIndex === -1) {
-        const notIdError = new Error(`there's not any user with id: ${id}`);
-        notIdError.statusCode = 400
-        throw notIdError
-      }
-
-      const { name, photo, email } = data;
-
-      if (!name || !photo || !email || !/@/.test(email) || email.length < 4) {
-        const notFieldComplete = new Error("enter all fields correctly");
-        notFieldComplete.statusCode = 400
-        throw notFieldComplete
-      }
-
-      const emailExists = this.users.some(
-        (user) => user.email === email && user.id !== id
-      );
-      if (emailExists) {
-        const emailExistsError = new Error("the email is already used by other user");
-        emailExistsError.statusCode = 400
-        throw emailExistsError
-      }
-      this.users[userToUpdateIndex].id = id
-      this.users[userToUpdateIndex].name = name;
-      this.users[userToUpdateIndex].photo = photo;
-      this.users[userToUpdateIndex].email = email;
-
-      await fs.promises.writeFile(this.path, JSON.stringify(this.users, null, 2));
-      
-      return this.users[userToUpdateIndex];
+      const one = this.readOne(id);
+      notFoundOne(one)
+      this.users = this.users.filter(x => x._id !== id);
+      const jsonData = JSON.stringify(this.users, null, 2);
+      await fs.promises.writeFile(this.path, jsonData);
+      return one;
     } catch (error) {
-      console.error(error.message);
-      throw error
+      throw error;
+    }
+  }
+
+  async update(eid, data) {
+    try {
+      const one = this.readOne(eid);
+      notFoundOne(one)
+      for (let x in data) {
+        one[x] = data[x]
+      }
+      const jsonData = JSON.stringify(this.users, null, 2);
+      await fs.promises.writeFile(this.path, jsonData);
+      return one;
+    } catch (error) {
+      throw error;
     }
   }
 }
 
 
 const user = new UserManager("./src/data/fs/files/users.json");
-
-// user.create({
-//   name: "lucas",
-//   photo: "url",
-//   email: "lucas@mail"
-// })
 
 export default user

@@ -1,5 +1,6 @@
 import fs from "fs"
 import crypto from "crypto"
+import notFoundOne from "../../utils/NotFoundOne.utils.js";
 
 class ProductManager {
   constructor(path) {
@@ -41,11 +42,15 @@ class ProductManager {
     }
   }
 
-  async read() {
+  async read({filter, options}) {
+    //corregir luego el filtro y paginacion
     try {
-      const fileData = await fs.promises.readFile(this.path, "utf-8");
-      const parsedData = JSON.parse(fileData);
-      return parsedData;
+      if(this.products.length === 0) {
+        const error = new Error("NOT FOUND!")
+        error.statusCode = 404
+        throw error
+      }
+      return this.products
     } catch (error) {
       throw error
     }
@@ -53,86 +58,43 @@ class ProductManager {
 
   async readOne(id) {
     try {
-        const fileData = await fs.promises.readFile(this.path, "utf-8")
-        const parsedData = JSON.parse(fileData)
-        const one = parsedData.find(x => x.id === id)
+        const one = this.products.find(x => x._id === id)
         if (!one) {
-          const notFoundError = new Error("Product not found");
-          notFoundError.statusCode = 400; 
+          const notFoundError = new Error("NOT FOUND!");
+          notFoundError.statusCode = 404; 
           throw notFoundError;
         } else {
             return one;
         }
     } catch (error) {
-        console.error(error.message);
         throw error
     }
   }
 
   async destroy(id) {
     try {
-        const index = this.products.findIndex(x => x.id === id);
-        if (index === -1) {
-            const notIdError = new Error("There is not any product with id " + id);
-            notIdError.statusCode = 400
-            throw notIdError
-        } else {
-            this.products.splice(index, 1);
-            const jsonData = JSON.stringify(this.products, null, 2);
-            await fs.promises.writeFile(this.path, jsonData);
-            return id;
-        }
+      const one = this.readOne(id);
+      notFoundOne(one)
+      this.products = this.products.filter(x => x._id !== id);
+      const jsonData = JSON.stringify(this.events, null, 2);
+      await fs.promises.writeFile(this.path, jsonData);
+      return one;
     } catch (error) {
-        console.error(error.message);
-        throw error
+      throw error;
     }
-}
+  }
 
-  async update(id, data) {
+  async update(eid, data) {
     try {
-      let productToUpdateIndex = this.products.findIndex((product) => product.id === id);
-      if (productToUpdateIndex === -1) {
-        const notIdError = new Error(`There is not any product with id: ${id}`);
-        notIdError.statusCode = 400
-        throw notIdError
+      const one = this.products.readOne(eid)
+      notFoundOne(one)
+      for (let x in data) {
+        one[x] = data[x] 
       }
-
-      const { title, photo, price, stock } = data;
-
-      if (!title && !photo && !price && !stock) {
-        const notFieldComplete = new Error("complete at least one field to update");
-        notFieldComplete.statusCode = 400
-        throw notFieldComplete
-      }
-
-      if (title) {
-        const productWithTitleExists = this.products.some(
-          (product) => product.title === title && product.id !== id
-        );
-        if (productWithTitleExists) {
-          const productExists = new Error("the product already exist");
-          productExists.statusCode = 400
-          throw productExists
-        }
-        this.products[productToUpdateIndex].title = title;
-      }
-      if (photo) {
-        this.products[productToUpdateIndex].photo = photo;
-      }
-
-      if (price) {
-        this.products[productToUpdateIndex].price = price;
-      }
-
-      if (stock) {
-        this.products[productToUpdateIndex].stock = stock;
-      }
-
-      await fs.promises.writeFile(this.path, JSON.stringify(this.products, null, 2));
-      
-      return this.products[productToUpdateIndex];
+      const jsonData = JSON.stringify(this.products, null, 2)
+      await fs.promises.writeFile(this.path, jsonData)
+      return one
     } catch (error) {
-      console.error(error.message);
       throw error
     }
   }
@@ -140,15 +102,6 @@ class ProductManager {
 
 
 
-const product = new ProductManager("./src/data/fs/files/products.json");
+const products = new ProductManager("./src/data/fs/files/products.json");
 
-// product.update("f2ecd3645303b901b8eccabb", {
-//   title: "bicicleta",
-//   stock: 1
-// })
-
-// product.create({title: "monitor", price: 50, stock: 40, photo: "url"})
-// product.create({title: "teclado", price: 50, stock: 40, photo: "url"})
-// product.create({title: "mouse", price: 50, stock: 40, photo: "url"})
-
-export default product
+export default products
