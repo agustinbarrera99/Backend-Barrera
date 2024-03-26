@@ -17,7 +17,7 @@ registerRouter.get("/", (req, res, next) => {
       }
     };
 
-    return res.render("login", {
+    return res.render("register", {
       user: user,
       usuarioComun: r(user),
       admin: r(user),

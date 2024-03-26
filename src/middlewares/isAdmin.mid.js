@@ -2,9 +2,7 @@ import { verifyToken } from "../utils/token.util.js";
 
 const isAdmin = (req, res, next) => {
   try {
-    const userData = verifyToken(req.cookies.token)
-    const { role } = userData;
-    console.log(userData)
+    const { role } = req.user;
     if (role === 1) {
       return next();
     } else {
