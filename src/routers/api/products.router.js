@@ -1,6 +1,6 @@
 import CustomRouter from "../CustomRouter.js";
 // import product from "../../data/fs/product.fs.js";
-import { products } from "../../data/mongo/manager.mongo.js";
+import products from "../../data/mongo/products.mongo.js";
 import passport from "../../middlewares/passport.mid.js";
 import { create, read, readOne, update, destroy } from "../../controllers/products.controller.js";
 

@@ -47,18 +47,11 @@ class OrdersManager {
         notProductIdError.statusCode = 400
         throw notProductIdError
       }
-      const newOrder = {
-        oid: crypto.randomBytes(12).toString("hex"),
-        uid,
-        pid,
-        quantity,
-        state,
-      };
 
-      this.orders.push(newOrder);
+      this.orders.push(data);
       fs.writeFileSync(this.pathToOrders, JSON.stringify(this.orders, null, 2));
 
-      return newOrder;
+      return data;
     } catch (error) {
       console.error(error.message);
       throw error

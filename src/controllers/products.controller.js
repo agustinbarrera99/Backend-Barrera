@@ -8,7 +8,7 @@ class ProductsController {
     try {
       const data = req.body;
       const response = await this.service.create(data);
-      return res.succes201(response);
+      return res.success201(response);
     } catch (error) {
       return next(error);
     }
@@ -28,7 +28,9 @@ class ProductsController {
       if (req.query.sort === "desc") {
         options.sort.title = "desc";
       }
-      const all = await this.service.read({ filter, options });
+      const filterAndOptions = {filter, options}
+      const all = await this.service.read(filterAndOptions);
+      console.log(all)
       return res.success200(all);
     } catch (error) {
       return next(error);

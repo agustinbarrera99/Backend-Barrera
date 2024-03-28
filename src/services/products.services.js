@@ -1,20 +1,21 @@
-import { products } from "../data/mongo/manager.mongo.js";
+import repository from "../repositories/product.rep.js";
 
 class ProductsService {
   constructor() {
-    this.model = products;
+    this.repository = repository;
   }
   create = async (data) => {
     try {
-      const response = await this.model.create(data);
+      const response = await this.repository.create(data);
       return response;
     } catch (error) {
       throw error;
     }
   };
-  read = async ({ filter, options }) => {
+  read = async (filterAndOptions) => {
     try {
-      const response = await this.model.read({ filter, options });
+      const response = await this.repository.read(filterAndOptions);
+      console.log(filterAndOptions)
       return response;
     } catch (error) {
       throw error;
@@ -22,7 +23,7 @@ class ProductsService {
   };
   readOne = async (id) => {
     try {
-      const response = await this.model.readOne(id);
+      const response = await this.repository.readOne(id);
       return response;
     } catch (error) {
       throw error;
@@ -30,7 +31,7 @@ class ProductsService {
   };
   update = async (id, data) => {
     try {
-      const response = await this.model.update(id, data);
+      const response = await this.repository.update(id, data);
       return response;
     } catch (error) {
       throw error;
@@ -38,7 +39,7 @@ class ProductsService {
   };
   destroy = async(id) => {
     try {
-        const response = await this.model.destroy(id)
+        const response = await this.repository.destroy(id)
         return response
     } catch (error) {
         throw error

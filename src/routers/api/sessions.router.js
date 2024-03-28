@@ -9,6 +9,7 @@ import {
   me,
   signout,
   badauth,
+  verifyAccount
 } from "../../controllers/sesssions.controller.js";
 
 class SessionsRouter extends CustomRouter {
@@ -23,7 +24,7 @@ class SessionsRouter extends CustomRouter {
 
     this.create("/login", ["PUBLIC"], passCallbackMid("login"), login);
 
-    this.create("/me", ["USER", "ADMIN", "PREM"], me);
+    this.create("/me", ["USER", "ADMIN", "PREM"], passCallbackMid("jwt"), me);
 
     this.create(
       "/signout",
@@ -48,8 +49,7 @@ class SessionsRouter extends CustomRouter {
       }),
       google
     );
-
-    this.create("/signout", ["USER", "ADMIN", "PREM"], signout);
+    this.create("/verify",["PUBLIC"], verifyAccount)
   }
 }
 

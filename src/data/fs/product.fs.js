@@ -23,19 +23,10 @@ class ProductManager {
 
   async create(data) {
     try {
-      const { title, photo, price, stock } = data;
-        
-      const newProduct = {
-        id: crypto.randomBytes(12).toString("hex"),
-        title,
-        photo,
-        price,
-        stock,
-      };
   
-      this.products.push(newProduct);
+      this.products.push(data);
       fs.writeFileSync(this.path, JSON.stringify(this.products, null, 2));
-      return newProduct;
+      return data;
     } catch (error) {
       console.error(error.message);
       return error; 
@@ -86,7 +77,7 @@ class ProductManager {
 
   async update(eid, data) {
     try {
-      const one = this.products.readOne(eid)
+      const one = this.readOne(eid)
       notFoundOne(one)
       for (let x in data) {
         one[x] = data[x] 
