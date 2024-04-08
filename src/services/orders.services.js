@@ -1,15 +1,18 @@
-import { orders } from "../data/mongo/manager.mongo.js";
+import OrderDTO from "../dto/orders.dto.js";
+import repository from "../repositories/order.rep.js";
 
 class OrdersService {
   constructor() {
-    this.model = orders;
+    this.repository = repository;
   }
-  create = async (data) => await this.model.create(data);
-  read = async ({ filter, options }) =>
-    await this.model.read({ filter, options });
-  report = async (id) => await this.model.report(id);
-  update = async (data) => await this.model.update(id, data);
-  destroy = async (id) => await this.model.destroy(id);
+  create = async (data) => {
+    data = new OrderDTO(data)
+    await this.repository.create(data)
+  };
+  read = async ({ filter, options }) => await this.repository.read({ filter, options });
+  readOne = async (id) => await this.repository.readOne(id);
+  update = async (data) => await this.repository.update(id, data);
+  destroy = async (id) => await this.repository.destroy(id);
 }
 
 const service = new OrdersService();

@@ -15,11 +15,10 @@ import cors from "cors"
 
 const server = express();
 
-const PORT = env.PORT || 8080;
+const PORT = env.PORT;
 
 const ready = () => {
   console.log(`server ready on port ${PORT}`)
-  dbConnection()
 };
 
 server.engine("handlebars", engine());
@@ -28,16 +27,16 @@ server.set("views", __dirname + "/src/views");
 
 server.listen(PORT, ready);
 
-server.use(cookieParser(process.env.SECRET_KEY))
-server.use(expressSession({
-  secret: process.env.SECRET_KEY,
-  resave: true,
-  saveUninitialized: true,
-  store: new MongoStore({
-    ttl: 7 * 24 * 60 * 60,
-    mongoUrl: process.env.DB_LINK
-  }),
-}))
+server.use(cookieParser(env.SECRET_KEY))
+// server.use(expressSession({
+//   secret: process.env.SECRET_KEY,
+//   resave: true,
+//   saveUninitialized: true,
+//   store: new MongoStore({
+//     ttl: 7 * 24 * 60 * 60,
+//     mongoUrl: process.env.DB_LINK
+//   }),
+// }))
 
 const router = new IndexRouter()
 

@@ -1,11 +1,13 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import { createHash, verifyHash } from "../utils/hash.util.js";
-import { users } from "../data/mongo/manager.mongo.js";
+import users from "../data/mongo/users.mongo.js";
 import { Strategy as GoogleStrategy } from "passport-google-oauth2";
 import { verifyToken, createToken } from "../utils/token.util.js";
 import { ExtractJwt, Strategy as JwtSrategry } from "passport-jwt";
 const { GOOGLE_ID, GOOGLE_CLIENT } = process.env;
+import repository from "../repositories/user.rep.js";
+import crypto from "crypto"
 
 passport.use(
   "register",
@@ -13,11 +15,12 @@ passport.use(
     { passReqToCallback: true, usernameField: "email" },
     async (req, email, password, done) => {
       try {
-        let one = await users.readByEmail(email);
+        let one = await repository.readByEmail(email);
         if (!one) {
           let data = req.body;
-          data.password = createHash(password);
-          let user = await users.create(data);
+          const verifyCode = crypto.randomBytes(12).toString("hex")
+          data.verifyCode = verifyCode
+          let user = await repository.create(data);
           return done(null, user);
         } else {
           return done(null, false, {
@@ -39,7 +42,7 @@ passport.use(
     async (req, email, password, done) => {
       try {
         const user = await users.readByEmail(email);
-        if (user && verifyHash(password, user.password)) {
+        if (user && verifyHash(password, user.password) && user.verified) {
           const token = createToken({ email, role: user.role });
           req.token = token;
           return done(null, user);

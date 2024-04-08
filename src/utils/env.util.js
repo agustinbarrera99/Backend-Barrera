@@ -1,19 +1,9 @@
 import { config } from "dotenv";
-
 import args from "./args.util.js";
 
 const { env } = args;
-
-let path = "";
-
-if (env === "prod") {
-  path = "./.env.prod";
-} else if (env === "test") {
-  path = "./.env.test";
-} else {
-  path = "./.env.dev";
-}
-
+const path =
+  env === "prod" ? "./.env.prod" : env === "dev" ? "./.env.dev" : "./.env.test";
 config({ path });
 
 export default {

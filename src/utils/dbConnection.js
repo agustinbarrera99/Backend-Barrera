@@ -1,12 +1,9 @@
 import { connect } from "mongoose";
 
-const dbConnection = async () => {
-    try {
-        await connect(process.env.DB_LINK)
-        console.log("db connected")
-    } catch (error) {
-        console.log(error)
-    }
+export default async function dbConnection() {
+  try {
+    await connect(process.env.DB_LINK);
+  } catch (error) {
+    console.log(error);
+  }
 }
-
-export default dbConnection

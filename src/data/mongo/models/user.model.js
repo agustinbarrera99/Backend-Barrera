@@ -9,6 +9,8 @@ const schema = new Schema(
     name: { type: String, required: true },
     role: { type: Number, default: 0 },
     photo: { type: String,default: "https://www.shutterstock.com/image-vector/default-avatar-profile-icon-vector-600nw-1725655669.jpg"},
+    verified: { type: Boolean, required: true, default: false },
+    verifyCode: {type: String, required: true }
   },
   { timestamps: true }
 );

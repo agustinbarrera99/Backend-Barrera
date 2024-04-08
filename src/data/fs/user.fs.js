@@ -21,17 +21,10 @@ class UserManager {
   }
   async create(data) {
     try {
-        const { name, photo, email } = data;
-        const newUser = {
-            id: crypto.randomBytes(12).toString("hex"),
-            name,
-            photo,
-            email,
-        };
-        this.users.push(newUser);
+        this.users.push(data);
         fs.writeFileSync(this.path, JSON.stringify(this.users, null, 2));
 
-        return newUser;
+        return data;
     } catch (error) {
         console.error(error.message);
         throw error
