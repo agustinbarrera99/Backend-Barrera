@@ -30,7 +30,6 @@ class ProductsController {
       }
       const filterAndOptions = {filter, options}
       const all = await this.service.read(filterAndOptions);
-      console.log(all)
       return res.success200(all);
     } catch (error) {
       return next(error);

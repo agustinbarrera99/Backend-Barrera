@@ -1,8 +1,9 @@
 import argsUtil from "../utils/args.util.js";
 import dbConnection from "../utils/dbConnection.js";
+import env from "../utils/env.util.js"
+const { DB_LINK } = env
 
 console.log(argsUtil);
-
 const environment = argsUtil.env;
 
 let dao = {};
@@ -23,7 +24,7 @@ switch (environment) {
     dao = { products: ProductsFs, users: UsersFs, orders: OrdersFs }
     break
   case "dev":
-    dbConnection()
+    dbConnection(DB_LINK)
     console.log("MONGO CONNECT")
     const { default: ProductsMongo } = await import("./mongo/products.mongo.js")
     const { default: UsersMongo } = await import("./mongo/users.mongo.js")

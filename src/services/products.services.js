@@ -15,7 +15,6 @@ class ProductsService {
   read = async (filterAndOptions) => {
     try {
       const response = await this.repository.read(filterAndOptions);
-      console.log(filterAndOptions)
       return response;
     } catch (error) {
       throw error;
