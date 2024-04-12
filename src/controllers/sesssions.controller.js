@@ -62,7 +62,6 @@ class SessionsController {
     try {
       const { verifyCode, email } = req.body;
       const user = await service.readByEmail(email);
-      console.log(user);
       if (user.verifyCode === verifyCode) {
         await service.update(user._id, { verified: true });
         return res.success200("Usuario verificado");

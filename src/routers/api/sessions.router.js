@@ -22,7 +22,7 @@ class SessionsRouter extends CustomRouter {
       register
     );
 
-    this.create("/login", ["PUBLIC"], login);
+    this.create("/login", ["PUBLIC"], passCallbackMid("login"), login);
 
     this.create("/me", ["USER", "ADMIN", "PREM"], me);
 
