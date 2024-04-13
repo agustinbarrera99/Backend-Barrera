@@ -1,5 +1,5 @@
-import handleCastError from "../../utils/handleCastError.js";
-import notFoundOne from "../../utils/NotFoundOne.utils.js";
+import CustomError from "../../utils/errors/CustomError.util.js";
+import errors from "../../utils/errors/errors.js";
 import { Types } from "mongoose";
 import Comment from "./models/comment.model.js";
 
@@ -28,7 +28,6 @@ class MongoManager {
   async readOne(id) {
     try {
       const one = await this.model.findById(id);
-      notFoundOne(one);
       return one;
     } catch (error) {
       handleCastError(error);
@@ -49,10 +48,9 @@ class MongoManager {
     try {
       const opt = { new: true };
       const one = await this.model.findByIdAndUpdate(id, data, opt);
-      notFoundOne(one);
       return one;
     } catch (error) {
-      handleCastError(error);
+      CustomError.new(errors.invalidId)
       throw error;
     }
   }
@@ -60,10 +58,9 @@ class MongoManager {
   async destroy(id) {
     try {
       const one = await this.model.findByIdAndDelete(id);
-      notFoundOne(one);
       return one;
     } catch (error) {
-      handleCastError(error);
+      CustomError.new(errors.invalidId)
       throw error;
     }
   }

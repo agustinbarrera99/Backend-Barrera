@@ -8,6 +8,7 @@ const { GOOGLE_ID, GOOGLE_CLIENT } = process.env;
 import repository from "../repositories/user.rep.js";
 import crypto from "crypto"
 import dao from "../data/index.factory.js";
+import errors from "../utils/errors/errors.js";
 
 const { users } = dao
 
@@ -25,10 +26,7 @@ passport.use(
           let user = await repository.create(data);
           return done(null, user);
         } else {
-          return done(null, false, {
-            message: "User already exists",
-            statusCode: 400,
-          });
+          return done(null, false, errors.existsPass);
         }
       } catch (error) {
         return done(error);
@@ -50,7 +48,7 @@ passport.use(
           req.token = token;
           return done(null, user);
         } else {
-          return done(null, false, { message: "Bad auth!" });
+          return done(null, false, errors.badAuth);
         }
       } catch (error) {
         return done(error);

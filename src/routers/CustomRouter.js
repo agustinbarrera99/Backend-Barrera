@@ -1,6 +1,7 @@
 import { Router } from "express";
 import jwt from "jsonwebtoken";
 import dao from "../data/index.factory.js";
+import errors from "../utils/errors/errors.js";
 
 const { users } = dao
 
@@ -40,30 +41,10 @@ export default class CustomRouter {
         response: payload,
       });
     };
-    res.error400 = (message) => {
-      return res.json({
-        statusCode: 400,
-        message,
-      });
-    };
-    res.error401 = () => {
-      return res.json({
-        statusCode: 401,
-        message: "Bad Auth!",
-      });
-    };
-    res.error403 = () => {
-      return res.json({
-        statusCode: 403,
-        message: "Forbidden!",
-      });
-    };
-    res.error404 = () => {
-      return res.json({
-        statusCode: 404,
-        message: "Not Found!",
-      });
-    };
+    res.error400 = (message) => res.json(errors.message(message))
+    res.error401 = () => res.json(errors.badAuth)
+    res.error403 = () => res.json(errors.forbidden)
+    res.error404 = () => res.json(errors.notFound)
     return next();
   };
 

@@ -1,4 +1,6 @@
 import service from "../services/products.services.js"
+import CustomError from "../utils/errors/CustomError.util.js";
+import errors from "../utils/errors/errors.js";
 
 class ProductsController {
   constructor() {
@@ -30,7 +32,11 @@ class ProductsController {
       }
       const filterAndOptions = {filter, options}
       const all = await this.service.read(filterAndOptions);
-      return res.success200(all);
+      if (all.docs.length > 0) {
+        return res.success200(all);
+      } else {
+        CustomError.new(errors.notFound)
+      }
     } catch (error) {
       return next(error);
     }
@@ -39,7 +45,10 @@ class ProductsController {
     try {
       const { pid } = req.params;
       const response = await this.service.readOne(pid);
-      return res.success200(response);
+      if (response ) {
+        return res.success200(response);
+      }
+      CustomError.new(errors.notFound)
     } catch (error) {
       return next(error);
     }
@@ -48,9 +57,11 @@ class ProductsController {
     try {
       const { pid } = req.params;
       const data = req.body;
-
       const response = await this.service.update(pid, data);
-      return res.success200(response);
+      if (response ) {
+        return res.success200(response);
+      }
+      CustomError.new(errors.notFound)
     } catch (error) {
       return next(error);
     }
@@ -59,7 +70,10 @@ class ProductsController {
     try {
       const { pid } = req.params;
       const response = await this.service.destroy(pid);
-      return res.success200(response);
+      if (response ) {
+        return res.success200(response);
+      }
+      CustomError.new(errors.notFound)
     } catch (error) {
       return next(error);
     }
