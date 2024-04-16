@@ -1,6 +1,6 @@
 import fs from "fs"
 import crypto from "crypto"
-import notFoundOne from "../../utils/NotFoundOne.utils.js";
+import notFoundOne from "../../utils/errors/CustomError.util.js";
 
 class UserManager {
   constructor(path) {

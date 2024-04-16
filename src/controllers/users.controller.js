@@ -30,7 +30,11 @@ class UsersController {
       }
   
       const response = await this.service.read({filter, sortAndPaginate});
-        return res.success200(response)
+      if (response.docs.length > 0) {
+        return res.success200(response);
+      } else {
+        CustomError.new(errors.notFound)
+      }
     } catch (error) {
       return next(error)
     }
@@ -39,7 +43,10 @@ class UsersController {
     try {
       const { uid } = req.params;
       const response = await this.service.readOne(uid);
-        return res.success200(response)
+      if (response ) {
+        return res.success200(response);
+      }
+      CustomError.new(errors.notFound)
     } catch (error) {
       return next(error)
     }
@@ -48,8 +55,10 @@ class UsersController {
     try {
       const {email} = req.params
       const response = await this.service.readByEmail(email)
-      return res.success200(response)
-  
+      if (response ) {
+        return res.success200(response);
+      }
+      CustomError.new(errors.notFound)
     } catch (error) {
       return next(error)
     }
@@ -60,7 +69,10 @@ class UsersController {
       const { uid } = req.params
       const data = req.body
       const response = await this.service.update(uid, data)
-      return res.success200(response)
+      if (response ) {
+        return res.success200(response);
+      }
+      CustomError.new(errors.notFound)
     } catch (error) {
       return next(error)
     }
@@ -69,7 +81,10 @@ class UsersController {
     try {
       const { uid } = req.params
       const response = await this.service.destroy(uid)
-      return res.success200(response)
+      if (response ) {
+        return res.success200(response);
+      }
+      CustomError.new(errors.notFound)
     } catch (error) {
       return next(error)
     }

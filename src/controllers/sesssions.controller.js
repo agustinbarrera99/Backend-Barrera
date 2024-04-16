@@ -18,7 +18,7 @@ class SessionsController {
   login = async (req, res, next) => {
     try {
       const opts = { maxAge: 7 * 24 * 60 * 60 * 1000, httpOnly: true };
-      return res.cookie("token", req.token, opts).success200("Logged in!");
+      return res.cookie("token", req.token, opts).success200({message: "Logged In", userData: req.user});
     } catch (error) {
       return next(error);
     }
@@ -33,13 +33,14 @@ class SessionsController {
   me = async (req, res, next) => {
     try {
       const isLogged = req.cookies.token ? true : false;
-      const user = {
-        email: req.user.email,
-        role: req.user.role,
-        photo: req.user.photo,
-        isLogged,
-      };
-      return res.success200(user);
+      if (isLogged) {
+        const user = {
+          email: req.user.email,
+          role: req.user.role,
+          photo: req.user.photo,
+        };
+        return res.success200(user);
+      }
     } catch (error) {
       return next(error);
     }
@@ -62,11 +63,11 @@ class SessionsController {
     try {
       const { verifyCode, email } = req.body;
       const user = await service.readByEmail(email);
-      console.log(user);
       if (user.verifyCode === verifyCode) {
         await service.update(user._id, { verified: true });
         return res.success200("Usuario verificado");
       } else {
+        
         return res.error401();
       }
     } catch (error) {

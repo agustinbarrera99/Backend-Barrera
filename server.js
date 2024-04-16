@@ -5,13 +5,10 @@ import pathHandler from "./src/middlewares/pathHandler.mid.js";
 import __dirname from "./utils.js";
 import morgan from "morgan";
 import { engine } from "express-handlebars";
-import dbConnection from "./src/utils/dbConnection.js";
 import cookieParser from "cookie-parser";
-import expressSession from "express-session"
-import MongoStore from "connect-mongo";
 import IndexRouter from "./src/routers/index.router.js";
-import args from "./src/utils/args.util.js"
 import cors from "cors"
+import compression from "express-compression";
 
 const server = express();
 
@@ -48,6 +45,11 @@ server.use(cors({
 server.use(express.urlencoded({ extended: true }));
 server.use(express.static(__dirname + "/public"));
 server.use(morgan("dev"));
+server.use(compression({
+  brotli: {enabled: true, zlib: {}}
+}))
+
+
 server.use("/", router.getRouter());
 server.use(errorHandler);
 server.use(pathHandler);

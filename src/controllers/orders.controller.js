@@ -25,7 +25,10 @@ class OrdersController {
         user_id: user._id
       };
       const all = await this.model.read({ filter });
-      return res.success200(all)
+      if (all.docs.length > 0) {
+        return res.success200(all);
+      }
+      CustomError.new(errors.notFound)
     } catch (error) {
       return next(error);
     }
@@ -35,7 +38,10 @@ class OrdersController {
       const { oid } = req.params
       const data = req.body
       const response = await this.model.update(oid, data)
-      return res.success200(response)
+      if (response ) {
+        return res.success200(response);
+      }
+      CustomError.new(errors.notFound)
     } catch (error) {
       return next(error)
     }
@@ -45,7 +51,10 @@ class OrdersController {
       const {uid} = req.params
   
       const response = await this.model.report(uid)
-      return res.success200(response)
+      if (response ) {
+        return res.success200(response);
+      }
+      CustomError.new(errors.notFound)
     } catch (error) {
       next(error)
     }
@@ -54,7 +63,10 @@ class OrdersController {
     try {
       const { oid } = req.params
       const response = await this.model.destroy(oid)
-      return res.success200(response)
+      if (response ) {
+        return res.success200(response);
+      }
+      CustomError.new(errors.notFound)
     } catch (error) {
       return next(error)
     }

@@ -1,13 +1,16 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import { createHash, verifyHash } from "../utils/hash.util.js";
-import users from "../data/mongo/users.mongo.js";
 import { Strategy as GoogleStrategy } from "passport-google-oauth2";
 import { verifyToken, createToken } from "../utils/token.util.js";
 import { ExtractJwt, Strategy as JwtSrategry } from "passport-jwt";
 const { GOOGLE_ID, GOOGLE_CLIENT } = process.env;
 import repository from "../repositories/user.rep.js";
 import crypto from "crypto"
+import dao from "../data/index.factory.js";
+import errors from "../utils/errors/errors.js";
+
+const { users } = dao
 
 passport.use(
   "register",
@@ -23,10 +26,7 @@ passport.use(
           let user = await repository.create(data);
           return done(null, user);
         } else {
-          return done(null, false, {
-            message: "User already exists",
-            statusCode: 400,
-          });
+          return done(null, false, errors.existsPass);
         }
       } catch (error) {
         return done(error);
@@ -41,13 +41,14 @@ passport.use(
     { passReqToCallback: true, usernameField: "email" },
     async (req, email, password, done) => {
       try {
-        const user = await users.readByEmail(email);
+        const user = await users.readByEmail(email)
+        console.log(user)
         if (user && verifyHash(password, user.password) && user.verified) {
           const token = createToken({ email, role: user.role });
           req.token = token;
           return done(null, user);
         } else {
-          return done(null, false, { message: "Bad auth!" });
+          return done(null, false, errors.badAuth);
         }
       } catch (error) {
         return done(error);

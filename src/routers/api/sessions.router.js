@@ -24,12 +24,11 @@ class SessionsRouter extends CustomRouter {
 
     this.create("/login", ["PUBLIC"], passCallbackMid("login"), login);
 
-    this.create("/me", ["USER", "ADMIN", "PREM"], passCallbackMid("jwt"), me);
+    this.create("/me", ["USER", "ADMIN", "PREM"], me);
 
     this.create(
       "/signout",
       ["USER", "ADMIN", "PREM"],
-      passCallbackMid("jwt"),
       signout
     );
 
