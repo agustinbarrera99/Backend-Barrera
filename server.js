@@ -9,13 +9,15 @@ import cookieParser from "cookie-parser";
 import IndexRouter from "./src/routers/index.router.js";
 import cors from "cors"
 import compression from "express-compression";
+import { winston } from "./src/middlewares/winston.mid.js";
+import logger from "./src/utils/logger/index.js";
 
 const server = express();
 
 const PORT = env.PORT;
 
 const ready = () => {
-  console.log(`server ready on port ${PORT}`)
+  logger.INFO(`server ready on port ${PORT}`)
 };
 
 server.engine("handlebars", engine());
@@ -44,7 +46,8 @@ server.use(cors({
 }))
 server.use(express.urlencoded({ extended: true }));
 server.use(express.static(__dirname + "/public"));
-server.use(morgan("dev"));
+// server.use(morgan("dev"));
+server.use(winston)
 server.use(compression({
   brotli: {enabled: true, zlib: {}}
 }))

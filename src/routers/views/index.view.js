@@ -7,6 +7,7 @@ import { isAuth } from "../../middlewares/isAuth.js";
 import { verifyToken } from "../../utils/token.util.js";
 import isAdmin from "../../middlewares/isAdmin.mid.js";
 import ordersRouter from "./orders.views.js"
+import logger from "../../utils/logger/winstonProd.util.js";
 
 class ViewsRouter extends CustomRouter {
   init() {
@@ -31,7 +32,7 @@ class ViewsRouter extends CustomRouter {
         }
         const all = await products.read({ filter, options });
         const user = req.cookies.token ? verifyToken(req.cookies.token) : null;
-        console.log(user)
+        logger.ERROR(error.message);
     
         const r = (u) => {
           if (u && u.role === 0) {

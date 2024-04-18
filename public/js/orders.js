@@ -10,7 +10,6 @@ selectors.forEach((x) =>
       };
       let response = await fetch(url, opts);
       response = await response.json();
-      console.log(response);
       if (response.statusCode === 200) {
         alert(response.message);
         location.reload();

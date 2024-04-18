@@ -1,3 +1,5 @@
+import logger from "../../utils/logger/index.js"
+
 class UserManager {
   static #users = [];
   constructor() {}
@@ -20,7 +22,7 @@ class UserManager {
       UserManager.#users.push(user);
       return user;
     } catch (error) {
-      return console.error(error.message);
+      return logger.ERROR(error.message);
     }
   }
   read() {
@@ -28,20 +30,20 @@ class UserManager {
       if (UserManager.#users.length < 1) {
         throw new Error("there is not any user registered");
       }
-      return console.log(UserManager.#users);
+      UserManager.#users;
     } catch (error) {
-      return console.error(error.message);
+      return logger.ERROR(error.message);
     }
   }
   readOne(id) {
     try {
       let one = UserManager.#users.find((x) => x.id === id);
       if (one) {
-        return console.log(one);
+        return one;
       }
       throw new Error("user not found");
     } catch (error) {
-      return console.error(error.message);
+      return logger.ERROR(error.message);
     }
   }
   update(id, data) {
@@ -71,7 +73,7 @@ class UserManager {
 
       return UserManager.#users[userToUpdateIndex];
     } catch (error) {
-      console.error(error.message);
+      logger.ERROR(error.message);
       return error.message;
     }
   }
@@ -86,7 +88,7 @@ class UserManager {
 
       return `User with id ${id} has been deleted successfully`;
     } catch (error) {
-      console.error(error.message);
+      logger.ERROR(error.message);
       return error.message;
     }
   }

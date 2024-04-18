@@ -1,8 +1,8 @@
 import { Router } from "express";
 import orders from "../../data/mongo/orders.mongo.js";
 import users from "../../data/mongo/users.mongo.js";
-import passCallbackMid from "../../middlewares/passCallBack.mid.js";
 import { verifyToken } from "../../utils/token.util.js";
+import passCallbackMid from "../../middlewares/passCallback.mid.js";
 
 const ordersRouter = Router();
 
@@ -21,7 +21,6 @@ ordersRouter.get("/", passCallbackMid("jwt"), async (req, res, next) => {
     const all = await orders.read({ filter, options });
 
     const userRole = req.cookies.token ? verifyToken(req.cookies.token) : null;
-    console.log(user);
 
     const r = (u) => {
       if (u && u.role === 0) {

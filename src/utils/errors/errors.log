@@ -1,0 +1,20 @@
+[31mERROR[39m: arrayOfPolicies.includes is not a function
+[31mERROR[39m: undefined
+[31mERROR[39m: arrayOfPolicies.includes is not a function
+[31mERROR[39m: arrayOfPolicies.includes is not a function
+[31mERROR[39m: handleCastError is not defined
+[33mWARN[39m: GET /api/ordersSADSD not found path
+[33mWARN[39m: GET /favicon.ico not found path
+[33mERROR[39m: GET /api/loggers/http not found path
+[33mERROR[39m: GET /favicon.ico not found path
+[33mERROR[39m: GET /api/loggers/http not found path
+[33mERROR[39m: GET /favicon.ico not found path
+[33mERROR[39m: GET /api/loggers/http not found path
+[33mERROR[39m: GET /favicon.ico not found path
+[33mERROR[39m: GET /api/loggers/ not found path
+[33mERROR[39m: GET /favicon.ico not found path
+[33mERROR[39m: GET /favicon.ico not found path
+[33mERROR[39m: GET /favicon.ico not found path
+[33mERROR[39m: GET /favicon.ico not found path
+[33mERROR[39m: logger.FATAL is not a function
+[33mERROR[39m: GET /favicon.ico not found path

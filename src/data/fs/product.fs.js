@@ -1,6 +1,7 @@
 import fs from "fs"
 import crypto from "crypto"
 import notFoundOne from "../../utils/errors/CustomError.util.js";
+import logger from "../../utils/logger/index.js";
 
 class ProductManager {
   constructor(path) {
@@ -28,7 +29,7 @@ class ProductManager {
       fs.writeFileSync(this.path, JSON.stringify(this.products, null, 2));
       return data;
     } catch (error) {
-      console.error(error.message);
+      logger.ERROR(error.message);
       return error; 
     }
   }
@@ -43,6 +44,7 @@ class ProductManager {
       }
       return this.products
     } catch (error) {
+      logger.ERROR(error.message);
       throw error
     }
   }
@@ -58,6 +60,7 @@ class ProductManager {
             return one;
         }
     } catch (error) {
+      logger.ERROR(error.message);
         throw error
     }
   }
@@ -71,6 +74,7 @@ class ProductManager {
       await fs.promises.writeFile(this.path, jsonData);
       return one;
     } catch (error) {
+      logger.ERROR(error.message);
       throw error;
     }
   }
@@ -86,6 +90,7 @@ class ProductManager {
       await fs.promises.writeFile(this.path, jsonData)
       return one
     } catch (error) {
+      logger.ERROR(error.message);
       throw error
     }
   }

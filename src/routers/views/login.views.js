@@ -5,7 +5,6 @@ const loginRouter = Router();
 loginRouter.get("/", (req, res, next) => {
   try {
     const user = req.cookies.token ? verifyToken(req.cookies.token) : null;
-    console.log(user);
 
     const r = (u) => {
       if (u && u.role === 0) {
