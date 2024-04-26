@@ -1,5 +1,4 @@
 import { Router } from "express";
-import { verifyToken } from "../../utils/token.util.js";
 
 const productsFormRouter = Router();
 

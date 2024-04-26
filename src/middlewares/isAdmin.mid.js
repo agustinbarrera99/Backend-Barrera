@@ -1,5 +1,3 @@
-import { verifyToken } from "../utils/token.util.js";
-
 const isAdmin = (req, res, next) => {
   try {
     const { role } = req.user;

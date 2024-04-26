@@ -1,7 +1,6 @@
 import { Router } from "express";
 import orders from "../../data/mongo/orders.mongo.js";
 import users from "../../data/mongo/users.mongo.js";
-import { verifyToken } from "../../utils/token.util.js";
 import passCallbackMid from "../../middlewares/passCallback.mid.js";
 
 const ordersRouter = Router();

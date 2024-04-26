@@ -7,12 +7,12 @@ export const createToken = (data) => {
   return token;
 };
 
-export const verifyToken = (token) => {
-  if(token) {
-    const data = jwt.verify(token, process.env.SECRET)
-    return data
-  } 
-  const error = new Error("bad auth token")
-  error.statusCode = 401
-  throw error
-};
+// export const verifyToken = (token) => {
+//   if(token) {
+//     const data = jwt.verify(token, process.env.SECRET)
+//     return data
+//   } 
+//   const error = new Error("bad auth token")
+//   error.statusCode = 401
+//   throw error
+// };
