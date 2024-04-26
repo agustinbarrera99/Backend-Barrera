@@ -1,3 +1,5 @@
+import logger from "../../utils/logger/index.js"
+
 class OrderManager {
     static #orders = [];
   
@@ -20,7 +22,7 @@ class OrderManager {
         OrderManager.#orders.push(order);
         return order;
       } catch (error) {
-        console.error(error.message);
+        logger.ERROR(error.message)
         return error.message;
       }
     }
@@ -30,9 +32,9 @@ class OrderManager {
         if (OrderManager.#orders.length < 1) {
           throw new Error("There are no orders registered");
         }
-        return console.log(OrderManager.#orders);
+        return OrderManager.#orders
       } catch (error) {
-        console.error(error.message);
+        logger.ERROR(error.message);
         return error.message;
       }
     }
@@ -41,11 +43,11 @@ class OrderManager {
       try {
         const one = OrderManager.#orders.find((order) => order.oid === id);
         if (one) {
-          return console.log(one);
+          return one;
         }
         throw new Error("Order not found");
       } catch (error) {
-        console.error(error.message);
+        logger.ERROR(error.message);
         return error.message;
       }
     }
@@ -81,7 +83,7 @@ class OrderManager {
   
         return OrderManager.#orders[orderToUpdateIndex];
       } catch (error) {
-        console.error(error.message);
+        logger.ERROR(error.message);
         return error.message;
       }
     }
@@ -97,10 +99,11 @@ class OrderManager {
   
         return `Order with id ${id} has been deleted successfully`;
       } catch (error) {
-        console.error(error.message);
+        logger.ERROR(error.message);
         return error.message;
       }
     }
   }
   
-  const orders = new OrderManager();
+  export const orders = new OrderManager();
+  

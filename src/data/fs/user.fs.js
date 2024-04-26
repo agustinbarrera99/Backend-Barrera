@@ -1,6 +1,7 @@
 import fs from "fs"
 import crypto from "crypto"
 import notFoundOne from "../../utils/errors/CustomError.util.js";
+import logger from "../../utils/logger/index.js";
 
 class UserManager {
   constructor(path) {
@@ -26,7 +27,7 @@ class UserManager {
 
         return data;
     } catch (error) {
-        console.error(error.message);
+        logger.ERROR(error.message);
         throw error
     }
 }
@@ -41,6 +42,7 @@ read({ filter, options }) {
       return this.users;
     }
   } catch (error) {
+    logger.ERROR(error.message)
     throw error;
   }
 }
@@ -56,7 +58,7 @@ read({ filter, options }) {
             return one;
         }
     } catch (error) {
-        console.error(error.message);
+        logger.ERROR(error.message);
         throw error
     }
   }
@@ -70,6 +72,7 @@ read({ filter, options }) {
         return one
       }
     } catch (error) {
+      logger.ERROR(error.message);
       throw error
     }
   }
@@ -83,6 +86,7 @@ read({ filter, options }) {
       await fs.promises.writeFile(this.path, jsonData);
       return one;
     } catch (error) {
+      logger.ERROR(error.message);
       throw error;
     }
   }
@@ -98,6 +102,7 @@ read({ filter, options }) {
       await fs.promises.writeFile(this.path, jsonData);
       return one;
     } catch (error) {
+      logger.ERROR(error.message);
       throw error;
     }
   }

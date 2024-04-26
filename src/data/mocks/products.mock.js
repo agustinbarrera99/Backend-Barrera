@@ -1,6 +1,7 @@
 import { faker } from "@faker-js/faker";
 import repository from "../../repositories/product.rep.js";
 import "dotenv/config.js"
+import logger from "../../utils/logger/index.js";
 
 function productMock() {
   return {
@@ -14,7 +15,7 @@ export const createProduct = async () => {
   try {
     await repository.create(productMock())
   } catch (error) {
-    console.log(error.message)
+    logger.ERROR(error.message);
   }
 }
 
@@ -22,4 +23,4 @@ for (let i = 1; i <= 100; i++) {
   createProduct()
 }
 
-console.log("data mocked")
+logger.INFO("data mocked")

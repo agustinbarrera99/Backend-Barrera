@@ -3,17 +3,16 @@ import products from "../../data/mongo/products.mongo.js";
 import registerRouter from "./register.views.js";
 import loginRouter from "./login.views.js";
 import productsFormRouter from "./productForm.views.js";
-import { isAuth } from "../../middlewares/isAuth.js";
-import { verifyToken } from "../../utils/token.util.js";
 import isAdmin from "../../middlewares/isAdmin.mid.js";
 import ordersRouter from "./orders.views.js"
+import logger from "../../utils/logger/winstonProd.util.js";
 
 class ViewsRouter extends CustomRouter {
   init() {
     this.router.use("/auth/login", loginRouter);
     this.router.use("/auth/register", registerRouter);
-    this.router.use("/products/form", isAuth, isAdmin, productsFormRouter);
-    this.router.use("/orders", isAuth, ordersRouter)
+    this.router.use("/products/form", isAdmin, productsFormRouter);
+    this.router.use("/orders", ordersRouter)
     this.read("/", ["PUBLIC"],async (req, res, next) => {
       try {
         const options = {
@@ -31,7 +30,7 @@ class ViewsRouter extends CustomRouter {
         }
         const all = await products.read({ filter, options });
         const user = req.cookies.token ? verifyToken(req.cookies.token) : null;
-        console.log(user)
+        logger.ERROR(error.message);
     
         const r = (u) => {
           if (u && u.role === 0) {

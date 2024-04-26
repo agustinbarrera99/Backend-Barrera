@@ -1,5 +1,6 @@
 import fs from "fs";
 import crypto from "crypto";
+import logger from "../../utils/logger/index.js"
 
 class OrdersManager {
   constructor(pathToUsers, pathToProducts, pathToOrders) {
@@ -53,7 +54,7 @@ class OrdersManager {
 
       return data;
     } catch (error) {
-      console.error(error.message);
+      logger.ERROR(error.message);
       throw error
     }
   }
@@ -68,7 +69,7 @@ class OrdersManager {
       const all = this.orders;
       return all
     } catch (error) {
-      console.error(error.message);
+      logger.ERROR(error.message);
       throw error
     }
   }
@@ -85,7 +86,7 @@ class OrdersManager {
       }
       return userOrders;
     } catch (error) {
-      console.error(error.message);
+      logger.ERROR(error.message);
       throw error
     }
   }
@@ -110,7 +111,7 @@ class OrdersManager {
       fs.writeFileSync(this.pathToOrders, JSON.stringify(this.orders, null, 2));
       return orderToUpdate;
     } catch (error) {
-      console.error(error.message);
+      logger.ERROR(error.message);
       throw error
     }
   }
@@ -128,7 +129,7 @@ class OrdersManager {
       fs.writeFileSync(this.pathToOrders, JSON.stringify(this.orders, null, 2));
       return deletedOrder;
     } catch (error) {
-      console.error(error.message);
+      logger.ERROR(error.message);
       throw error;
     }
   }

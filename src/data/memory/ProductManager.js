@@ -1,3 +1,5 @@
+import logger from "../../utils/logger/index.js"
+
 class ProductManager {
   static #products = [];
   constructor() {}
@@ -24,7 +26,7 @@ class ProductManager {
       ProductManager.#products.push(product);
       return product;
     } catch (error) {
-      return console.error(error.message);
+      return logger.ERROR(error.message);
     }
   }
   read() {
@@ -32,8 +34,9 @@ class ProductManager {
       if (ProductManager.#products.length < 1) {
         throw new Error("there is not any product");
       }
-      return console.log(ProductManager.#products);
+      return ProductManager.#products
     } catch (error) {
+      logger.ERROR(error.message);
       return error.message;
     }
   }
@@ -41,10 +44,11 @@ class ProductManager {
     try {
       let one = ProductManager.#products.find((x) => x.id === id);
       if (one) {
-        return console.log(one);
+        return one;
       }
       throw new Error("product not found");
     } catch (error) {
+      logger.ERROR(error.message);
       return error.message;
     }
   }
@@ -87,7 +91,7 @@ class ProductManager {
 
       return ProductManager.#products[productToUpdateIndex];
     } catch (error) {
-      console.error(error.message);
+      logger.ERROR(error.message);
       return error.message;
     }
   }
@@ -104,10 +108,10 @@ class ProductManager {
 
       return `Product with id ${id} has been deleted successfully`;
     } catch (error) {
-      console.error(error.message);
+      logger.ERROR(error.message);
       return error.message;
     }
   }
 }
 
-const products = new ProductManager();
+export const products = new ProductManager();

@@ -1,6 +1,7 @@
 const loginButton = document.querySelector("#loginButton")
 const googleLogin = document.querySelector("#googleLogin")
 
+
 loginButton.addEventListener("click", async (e) => {
     try {
         e.preventDefault()

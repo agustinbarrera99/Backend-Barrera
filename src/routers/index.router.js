@@ -1,4 +1,3 @@
-import { Router } from "express";
 import CustomRouter from "./CustomRouter.js";
 import ApiRouter from "./api/index.router.js"
 import ViewsRouter from "./views/index.view.js";

@@ -2,7 +2,7 @@ import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import { createHash, verifyHash } from "../utils/hash.util.js";
 import { Strategy as GoogleStrategy } from "passport-google-oauth2";
-import { verifyToken, createToken } from "../utils/token.util.js";
+import { createToken } from "../utils/token.util.js";
 import { ExtractJwt, Strategy as JwtSrategry } from "passport-jwt";
 const { GOOGLE_ID, GOOGLE_CLIENT } = process.env;
 import repository from "../repositories/user.rep.js";
@@ -42,7 +42,6 @@ passport.use(
     async (req, email, password, done) => {
       try {
         const user = await users.readByEmail(email)
-        console.log(user)
         if (user && verifyHash(password, user.password) && user.verified) {
           const token = createToken({ email, role: user.role });
           req.token = token;

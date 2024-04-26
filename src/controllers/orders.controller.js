@@ -20,7 +20,6 @@ class OrdersController {
       const token = req.cookies.token
       const userData = verifyToken(token)
       const user = await users.readByEmail(userData.email)
-      console.log(user)
       const filter = {
         user_id: user._id
       };
