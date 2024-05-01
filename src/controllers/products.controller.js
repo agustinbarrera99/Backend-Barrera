@@ -10,7 +10,7 @@ class ProductsController {
   create = async (req, res, next) => {
     try {
       const data = req.body;
-      logger.INFO(data)
+      data.owner_id = req.user._id
       const response = await this.service.create(data);
       return res.success201(response);
     } catch (error) {
@@ -70,8 +70,9 @@ class ProductsController {
   }
   destroy = async (req, res, next) => {
     try {
+      const user = req.user
       const { pid } = req.params;
-      const response = await this.service.destroy(pid);
+      const response = await this.service.destroy(pid, user);
       if (response ) {
         return res.success200(response);
       }

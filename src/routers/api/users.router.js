@@ -1,12 +1,10 @@
-import { Router } from "express";
 // import user from "../../data/fs/user.fs.js";
-import users from "../../data/mongo/users.mongo.js";
 import CustomRouter from "../CustomRouter.js";
 import { create, read, readOne, update, destroy, readByEmail } from "../../controllers/users.controller.js";
 
 class UsersRouter extends CustomRouter {
   init() {
-    this.create("/", create);
+    this.create("/", ["PUBLIC"],create);
     
     this.read("/", read);
     
