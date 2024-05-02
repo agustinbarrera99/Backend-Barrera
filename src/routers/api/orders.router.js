@@ -4,9 +4,9 @@ import { create, read, update, readOne } from "../../controllers/orders.controll
 
 class OrdersRouter extends CustomRouter {
   init() {
-    this.create("/", ["ADMIN"], create);
+    this.create("/", ["ADMIN", "PREM"], create);
     
-    this.read("/", ["USER"], read);
+    this.read("/", ["USER", "ADMIN", "PREM"], read);
     
     this.update("/:oid", update)
     
