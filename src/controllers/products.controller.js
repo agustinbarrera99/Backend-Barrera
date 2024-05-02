@@ -57,9 +57,10 @@ class ProductsController {
   }
   update = async (req, res, next) => {
     try {
+      const user = req.user
       const { pid } = req.params;
       const data = req.body;
-      const response = await this.service.update(pid, data);
+      const response = await this.service.update(pid, data, user);
       if (response ) {
         return res.success200(response);
       }
