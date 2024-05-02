@@ -32,17 +32,22 @@ class ProductsController {
       if (req.query.sort === "desc") {
         options.sort.title = "desc";
       }
-      const filterAndOptions = {filter, options}
+      const filterAndOptions = { filter, options };
+      
+      if (req.user.role === 2) {
+        filter.owner_id = { $ne: req.user._id };
+      }
+  
       const all = await this.service.read(filterAndOptions);
       if (all.docs.length > 0) {
         return res.success200(all);
       } else {
-        CustomError.new(errors.notFound)
+        CustomError.new(errors.notFound);
       }
     } catch (error) {
       return next(error);
     }
-  }
+  };
   readOne = async (req, res, next) => {
     try {
       const { pid } = req.params;
