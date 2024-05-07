@@ -1,4 +1,6 @@
 import repository from "../repositories/product.rep.js";
+import CustomError from "../utils/errors/CustomError.util.js";
+import errors from "../utils/errors/errors.js";
 
 class ProductsService {
   constructor() {
@@ -28,18 +30,32 @@ class ProductsService {
       throw error;
     }
   };
-  update = async (id, data) => {
+  async update(id, data, user) {
     try {
-      const response = await this.repository.update(id, data);
-      return response;
+      const product = await this.repository.readOne(id);
+      if (user.role === 1 || (user.role === 2 && product.owner_id.toString() === user._id.toString())) {
+        const response = await this.repository.update(product._id, data, { new: true });
+        return response;
+      } else {
+        CustomError.new(errors.badAuth)
+      }
     } catch (error) {
       throw error;
     }
-  };
-  destroy = async(id) => {
+  }
+  destroy = async(pid, user) => {
     try {
-        const response = await this.repository.destroy(id)
-        return response
+        const product = await this.repository.readOne(pid)
+        console.log(product.owner_id)
+        console.log(user._id)
+        if (user.role === 1) {
+          const response = await this.repository.destroy(pid)
+          return response
+        }
+        if (user.role === 2 && user._id.toString() === product.owner_id.toString()) {
+          const response = await this.repository.destroy(pid)
+          return response
+        }
     } catch (error) {
         throw error
     }

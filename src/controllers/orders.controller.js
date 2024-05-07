@@ -1,5 +1,8 @@
 import orders from "../data/mongo/orders.mongo.js";
 import users from "../data/mongo/users.mongo.js"
+import CustomError from "../utils/errors/CustomError.util.js";
+import errors from "../utils/errors/errors.js";
+import products from "../data/mongo/products.mongo.js";
 
 class OrdersController {
   constructor() {
@@ -8,18 +11,24 @@ class OrdersController {
 
   create = async (req, res, next) => {
     try {
-        const data = req.body;
-        const response = await this.model.create(data);
-        return res.success201(response)
+      const data = req.body;
+      data.user_id = req.user._id;
+      console.log(data)
+      const product = await products.readOne(data.product_id);
+      console.log(product)
+      if (req.user.role === 2 && product.owner_id.toString() === req.user._id.toString()) {
+        throw CustomError.new(errors.message("No puedes agregar tus propios productos al carrito"));
+      }
+  
+      const response = await this.model.create(data);
+      return res.success201(response);
     } catch (error) {
-      return next(error)
+      return next(error);
     }
-  }
+  };
   read =  async (req, res, next) => {
     try {
-      const token = req.cookies.token
-      const userData = verifyToken(token)
-      const user = await users.readByEmail(userData.email)
+      const user = req.user
       const filter = {
         user_id: user._id
       };

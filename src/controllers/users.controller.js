@@ -89,8 +89,17 @@ class UsersController {
       return next(error)
     }
   }
+  toggleUserRole = async (req, res, next) => {
+    try {
+      const {uid} = req.params
+      const response = await this.service.toggleUserRole(uid)
+      return res.success200(response)
+    } catch (error) {
+      
+    }
+  }
 }
 
 export default UsersController
 const controller = new UsersController()
-export const { create, read, readOne, update, destroy, readByEmail } = controller
+export const { create, read, readOne, update, destroy, readByEmail, toggleUserRole } = controller

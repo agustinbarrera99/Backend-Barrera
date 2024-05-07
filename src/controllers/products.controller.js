@@ -10,7 +10,7 @@ class ProductsController {
   create = async (req, res, next) => {
     try {
       const data = req.body;
-      logger.INFO(data)
+      data.owner_id = req.user._id
       const response = await this.service.create(data);
       return res.success201(response);
     } catch (error) {
@@ -32,17 +32,22 @@ class ProductsController {
       if (req.query.sort === "desc") {
         options.sort.title = "desc";
       }
-      const filterAndOptions = {filter, options}
+      const filterAndOptions = { filter, options };
+      
+      if (req.user.role === 2) {
+        filter.owner_id = { $ne: req.user._id };
+      }
+  
       const all = await this.service.read(filterAndOptions);
       if (all.docs.length > 0) {
         return res.success200(all);
       } else {
-        CustomError.new(errors.notFound)
+        CustomError.new(errors.notFound);
       }
     } catch (error) {
       return next(error);
     }
-  }
+  };
   readOne = async (req, res, next) => {
     try {
       const { pid } = req.params;
@@ -57,9 +62,10 @@ class ProductsController {
   }
   update = async (req, res, next) => {
     try {
+      const user = req.user
       const { pid } = req.params;
       const data = req.body;
-      const response = await this.service.update(pid, data);
+      const response = await this.service.update(pid, data, user);
       if (response ) {
         return res.success200(response);
       }
@@ -70,8 +76,9 @@ class ProductsController {
   }
   destroy = async (req, res, next) => {
     try {
+      const user = req.user
       const { pid } = req.params;
-      const response = await this.service.destroy(pid);
+      const response = await this.service.destroy(pid, user);
       if (response ) {
         return res.success200(response);
       }

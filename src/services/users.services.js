@@ -60,6 +60,16 @@ class UsersService {
       throw error
     }
   }
+  async toggleUserRole(id) {
+    try {
+      const user = await this.repository.readOne(id)
+      const newRole = user.role === 1 ? 2 : 1
+      const updatedUser = await this.repository.update(id, {role: newRole})
+      return updatedUser
+    } catch (error) {
+      throw error
+    }
+  }
 }
 
 const service = new UsersService()
