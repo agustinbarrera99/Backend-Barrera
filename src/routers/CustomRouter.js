@@ -37,7 +37,7 @@ export default class CustomRouter {
     };
     res.success201 = (payload) => {
       return res.json({
-        statusCode: 200,
+        statusCode: 201,
         response: payload,
       });
     };

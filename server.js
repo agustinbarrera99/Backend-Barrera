@@ -11,10 +11,15 @@ import cors from "cors"
 import compression from "express-compression";
 import { winston } from "./src/middlewares/winston.mid.js";
 import logger from "./src/utils/logger/index.js";
+import { options as swaggerOptions } from "./src/utils/swagger.util.js";
+import swaggerJSDoc from "swagger-jsdoc";
+import { serve, setup } from "swagger-ui-express";
 
 const server = express();
 
 const PORT = env.PORT;
+
+const specs = swaggerJSDoc(swaggerOptions)
 
 const ready = () => {
   logger.INFO(`server ready on port ${PORT}`)
@@ -37,8 +42,8 @@ server.use(cookieParser(env.SECRET_KEY))
 //   }),
 // }))
 
+server.use("/api/docs", serve, setup(specs))
 const router = new IndexRouter()
-
 server.use(express.json());
 server.use(cors({
   origin: true,
