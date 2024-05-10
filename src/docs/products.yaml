@@ -1,6 +1,6 @@
 components:
   schemas:
-    Create:
+    Product:
       type: object
       properties:
         title:
@@ -15,15 +15,20 @@ components:
         photo:
           type: string
           description: photo of the product
+        _id:
+          type: string
+          description: id of the product
         owner_id:
           type: string
-          description: owner id of the product
+          description: id of the owner
       example:
-        title: monitor
-        price: 10000
-        stock: 50
-        photo: monitorurl
-        owner_id: 94733a1b1a4e982dd7dab0e7
+        title: producto generico
+        price: 50
+        stock: 10
+        photo: photo.png
+        _id: asd23124212
+        owner_id: 1423sdasd2f
+
   responses:
     res201:
       description: Success response
@@ -36,38 +41,16 @@ components:
                 type: number
                 description: Status code of the response
               response:
-                type: object
-                properties:
-                  title:
-                    type: string
-                  price:
-                    type: number
-                  stock:
-                    type: number
-                  photo:
-                    type: string
-                  owner_id:
-                    type: string
-                  _id:
-                    type: string
-                  createdAt:
-                    type: string
-                  updatedAt:
-                    type: string
-                  __v:
-                    type: number
+                $ref: '#/components/schemas/Product'
             example:
               statusCode: 201
               response:
-                title: celular usado
-                price: 200
-                stock: 40
-                photo: "https://jkfenner.com/wp-content/uploads/2019/11/default.jpg"
-                owner_id: "2c6bc858a698c6c34e052c59"
-                _id: "b415aa91412ee49ca816ae63"
-                createdAt: "2024-05-09T18:06:32.746Z"
-                updatedAt: "2024-05-09T18:06:32.746Z"
-                __v: 0
+                title: producto generico
+                price: 50
+                stock: 10
+                photo: photo.png
+                _id: asd23124212
+                owner_id: 1423sdasd2f
 
     res401:
       description: Unauthorized response
@@ -122,39 +105,210 @@ components:
 
 paths:
   /api/products:
-    post:
+    post: 
       summary: to create a product
       tags:
         - Products
+      security:
+        - cookieAuth: []
       requestBody:
         required: true
         description: data of the product
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Create'
+              $ref: '#/components/schemas/Product'
       responses:
         '201':
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/responses/res201'
+                $ref: '#/components/schemas/Product'
+              example:
+                statusCode: 201
+                response:
+                  title: producto generico
+                  price: 50
+                  stock: 10
+                  photo: photo.png
+                  _id: asd23124212
+                  owner_id: 1423sdasd2f
         '401':
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/responses/res401'
+                type: object
+                properties:
+                  statusCode:
+                    type: number
+                    description: Status code of the response
+                  message:
+                    type: string
+                    description: Error message
+              example:
+                statusCode: 401
+                message: "Bad Auth!"
         '403':
           description: Forbidden
           content:
             application/json:
               schema:
-                $ref: '#/components/responses/res403'
+                type: object
+                properties:
+                  statusCode:
+                    type: number
+                    description: Status code of the response
+                  message:
+                    type: string
+                    description: Error message
+              example:
+                statusCode: 403
+                message: "Forbidden"
         '500':
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: '#/components/responses/res500'
+                type: object
+                properties:
+                  statusCode:
+                    type: number
+                    description: Status code of the response
+                  message:
+                    type: string
+                    description: Error message
+              example:
+                statusCode: 500
+                message: "POST /api/products/ products validation failed: title: Path `title` is required."
+
+    get:
+      summary: Get all products
+      tags:
+        - Products
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+        '401':
+          $ref: '#/components/responses/res401'
+        '403':
+          $ref: '#/components/responses/res403'
+        '500':
+          $ref: '#/components/responses/res500'
+
+  /api/products/{pid}:
+    get:
+      summary: Get a specific product
+      tags:
+        - Products
+      security:
+        - cookieAuth: []
+      parameters:
+        - in: path
+          name: pid
+          required: true
+          schema:
+            type: string
+          description: The ID of the product to retrieve
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+              example:
+                title: producto generico
+                price: 50
+                stock: 10
+                photo: photo.png
+                _id: asd23124212
+                owner_id: 1423sdasd2f
+        '401':
+          $ref: '#/components/responses/res401'
+        '403':
+          $ref: '#/components/responses/res403'
+        '500':
+          $ref: '#/components/responses/res500'
+    put:
+      summary: Update a specific product
+      tags:
+        - Products
+      security:
+        - cookieAuth: []
+      parameters:
+        - in: path
+          name: pid
+          required: true
+          schema:
+            type: string
+          description: The ID of the product to update
+      requestBody:
+        required: true
+        description: New data for the product
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+              example:
+                title: producto generico
+                price: 50
+                stock: 10
+                photo: photo.png
+                _id: asd23124212
+                owner_id: 1423sdasd2f
+        '401':
+          $ref: '#/components/responses/res401'
+        '403':
+          $ref: '#/components/responses/res403'
+        '500':
+          $ref: '#/components/responses/res500'
+    delete:
+      summary: Delete a specific product
+      tags:
+        - Products
+      security:
+        - cookieAuth: []
+      parameters:
+        - in: path
+          name: pid
+          required: true
+          schema:
+            type: string
+          description: The ID of the product to delete
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+              example:
+                title: producto generico
+                price: 50
+                stock: 10
+                photo: photo.png
+                _id: asd23124212
+                owner_id: 1423sdasd2f
+        '401':
+          $ref: '#/components/responses/res401'
+        '403':
+          $ref: '#/components/responses/res403'
+        '500':
+          $ref: '#/components/responses/res500'
