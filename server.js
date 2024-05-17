@@ -14,6 +14,9 @@ import logger from "./src/utils/logger/index.js";
 import { options as swaggerOptions } from "./src/utils/swagger.util.js";
 import swaggerJSDoc from "swagger-jsdoc";
 import { serve, setup } from "swagger-ui-express";
+import cluster from "cluster"
+import { cpus } from "os";
+
 
 const server = express();
 
@@ -28,8 +31,6 @@ const ready = () => {
 server.engine("handlebars", engine());
 server.set("view engine", "handlebars");
 server.set("views", __dirname + "/src/views");
-
-server.listen(PORT, ready);
 
 server.use(cookieParser(env.SECRET_KEY))
 // server.use(expressSession({
@@ -62,4 +63,12 @@ server.use("/", router.getRouter());
 server.use(errorHandler);
 server.use(pathHandler);
 
+if (cluster.isPrimary) {
+  const numberOfProcess = cpus().length
+  for (let i = 1; i <= numberOfProcess; i++) {
+    cluster.fork()
+  }
+} else {
+  server.listen(PORT, ready);
+}
 
