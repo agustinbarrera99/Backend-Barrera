@@ -8,7 +8,8 @@
     "start": "nodemon server.js --env prod",
     "dev": "nodemon ./server.js --env dev",
     "test": "nodemon ./server.js --env test",
-    "mocks": "node ./src/data/mocks/products.mock.js --env dev"
+    "mocks": "node ./src/data/mocks/products.mock.js --env dev",
+    "super": "mocha ./test/supertest"
   },
   "keywords": [],
   "author": "",
@@ -42,6 +43,9 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",
-    "nodemon": "^3.0.2"
+    "chai": "^5.1.1",
+    "mocha": "^10.4.0",
+    "nodemon": "^3.0.2",
+    "supertest": "^7.0.0"
   }
 }

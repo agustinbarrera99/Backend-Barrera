@@ -8,8 +8,8 @@ class UsersRep {
     }
     create = async(data) => {
         data = new UserDTO(data)
-        const response = await this.model.create(data)
-        return response
+        const user = await this.model.create(data)
+        return user
     }
     read = async() => {
         const response = await this.model.read({filter, options})

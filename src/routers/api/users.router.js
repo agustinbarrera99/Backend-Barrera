@@ -16,7 +16,7 @@ class UsersRouter extends CustomRouter {
 
     this.update("/premium/:uid", ["ADMIN", "PREM"], toggleUserRole)
     
-    this.destroy("/:uid", destroy)
+    this.destroy("/:uid", ["PUBLIC"],destroy)
   }
 }
 

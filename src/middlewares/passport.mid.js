@@ -42,7 +42,7 @@ passport.use(
     async (req, email, password, done) => {
       try {
         const user = await users.readByEmail(email)
-        if (user && verifyHash(password, user.password) && user.verified) {
+        if (user && verifyHash(password, user.password)) {
           const token = createToken({ email, role: user.role });
           req.token = token;
           return done(null, user);
