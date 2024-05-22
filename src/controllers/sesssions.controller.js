@@ -1,4 +1,5 @@
 import service from "../services/users.services.js";
+import repository from "../repositories/user.rep.js";
 import crypto from "crypto";
 
 class SessionsController {
@@ -8,9 +9,10 @@ class SessionsController {
   register = async (req, res, next) => {
     const { email, name } = req.body;
     const { verifyCode } = req.user;
-    await this.service.register({ email, name, verifyCode });
+    const user = await this.service.register({ email, name, verifyCode });
+    console.log(user)
     try {
-      return res.success201("Registered!");
+      return res.success201("registered");
     } catch (error) {
       return next(error);
     }
@@ -18,7 +20,8 @@ class SessionsController {
   login = async (req, res, next) => {
     try {
       const opts = { maxAge: 7 * 24 * 60 * 60 * 1000, httpOnly: true };
-      return res.cookie("token", req.token, opts).success200({message: "Logged In"});
+      const user = await repository.readByEmail(req.user.email)
+      return res.cookie("token", req.token, opts).success200({user, message: "Logged In"});
     } catch (error) {
       return next(error);
     }

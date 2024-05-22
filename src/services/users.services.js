@@ -7,8 +7,9 @@ class UsersService {
   }
   create = async (data) => {
     try {
-      const response = await this.repository.create(data);
-      return response;
+      const user = await this.repository.create(data);
+      console.log(user)
+      return user;
     } catch (error) {
       throw error;
     }
