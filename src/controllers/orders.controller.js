@@ -51,7 +51,7 @@ class OrdersController {
       }
       CustomError.new(errors.notFound)
     } catch (error) {
-      return next(error)
+      next(error)
     }
   }
   readOne =  async (req, res, next) => {
