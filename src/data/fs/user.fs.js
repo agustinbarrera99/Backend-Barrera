@@ -32,17 +32,52 @@ class UserManager {
     }
 }
 
-read({ filter, options }) {
+read({ filter = {}, options = {} }) {
   try {
     if (this.users.length === 0) {
       const error = new Error("NOT FOUND!");
       error.statusCode = 404;
       throw error;
-    } else {
-      return this.users;
     }
+
+    let filteredUsers = this.users;
+    if (Object.keys(filter).length > 0) {
+      filteredUsers = this.users.filter(user => {
+        return Object.keys(filter).every(key => user[key] === filter[key]);
+      });
+    }
+
+    const { limit = 10, page = 1, sort = null } = options;
+    let paginatedUsers = filteredUsers;
+
+    if (sort) {
+      const [sortField, sortOrder] = sort.split(' ');
+      paginatedUsers = paginatedUsers.sort((a, b) => {
+        if (sortOrder === 'asc') {
+          return a[sortField] > b[sortField] ? 1 : -1;
+        } else {
+          return a[sortField] < b[sortField] ? 1 : -1;
+        }
+      });
+    }
+
+    const total = paginatedUsers.length;
+    const totalPages = Math.ceil(total / limit);
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+    const results = paginatedUsers.slice(startIndex, endIndex);
+
+    return {
+      docs: results,
+      totalDocs: total,
+      limit: limit,
+      page: page,
+      totalPages: totalPages,
+      hasNextPage: page < totalPages,
+      hasPrevPage: page > 1,
+    };
   } catch (error) {
-    logger.ERROR(error.message)
+    logger.ERROR(error.message);
     throw error;
   }
 }

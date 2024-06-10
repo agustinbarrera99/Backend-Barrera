@@ -34,18 +34,53 @@ class ProductManager {
     }
   }
 
-  async read({filter, options}) {
-    //corregir luego el filtro y paginacion
+  async read({ filter = {}, options = {} }) {
     try {
-      if(this.products.length === 0) {
-        const error = new Error("NOT FOUND!")
-        error.statusCode = 404
-        throw error
+      if (this.products.length === 0) {
+        const error = new Error("NOT FOUND!");
+        error.statusCode = 404;
+        throw error;
       }
-      return this.products
+
+      let filteredProducts = this.products;
+      if (Object.keys(filter).length > 0) {
+        filteredProducts = this.products.filter(product => {
+          return Object.keys(filter).every(key => product[key] === filter[key]);
+        });
+      }
+
+      const { limit = 10, page = 1, sort = null } = options;
+      let paginatedProducts = filteredProducts;
+
+      if (sort) {
+        const [sortField, sortOrder] = sort.split(' ');
+        paginatedProducts = paginatedProducts.sort((a, b) => {
+          if (sortOrder === 'asc') {
+            return a[sortField] > b[sortField] ? 1 : -1;
+          } else {
+            return a[sortField] < b[sortField] ? 1 : -1;
+          }
+        });
+      }
+
+      const total = paginatedProducts.length;
+      const totalPages = Math.ceil(total / limit);
+      const startIndex = (page - 1) * limit;
+      const endIndex = page * limit;
+      const results = paginatedProducts.slice(startIndex, endIndex);
+
+      return {
+        docs: results,
+        totalDocs: total,
+        limit: limit,
+        page: page,
+        totalPages: totalPages,
+        hasNextPage: page < totalPages,
+        hasPrevPage: page > 1,
+      };
     } catch (error) {
       logger.ERROR(error.message);
-      throw error
+      throw error;
     }
   }
 
