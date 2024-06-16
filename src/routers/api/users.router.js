@@ -4,24 +4,20 @@ import { create, read, readOne, update, destroy, readByEmail, toggleUserRole } f
 
 class UsersRouter extends CustomRouter {
   init() {
-    this.create("/", ["PUBLIC"],create);
+    this.create("/", ["ADMIN"],create);
     
-    this.read("/", read);
+    this.read("/", ["PUBLIC"], read);
     
-    this.read("/:uid", readOne);
+    this.read("/:uid", ["ADMIN"],readOne);
     
-    this.read("/email/:email", readByEmail)
+    this.read("/email/:email", ["ADMIN"],readByEmail)
     
-    this.update("/:uid", update)
+    this.update("/:uid", ["ADMIN"],update)
 
     this.update("/premium/:uid", ["ADMIN", "PREM"], toggleUserRole)
     
-    this.destroy("/:uid", ["PUBLIC"],destroy)
+    this.destroy("/:uid", ["ADMIN"],destroy)
   }
 }
-
-
-
-
 
 export default UsersRouter;

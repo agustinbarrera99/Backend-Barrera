@@ -30,7 +30,6 @@ class MongoManager {
       const one = await this.model.findById(id);
       return one;
     } catch (error) {
-      handleCastError(error);
       throw error;
     }
   }

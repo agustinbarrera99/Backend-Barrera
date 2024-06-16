@@ -33,11 +33,14 @@ class ProductsService {
   async update(id, data, user) {
     try {
       const product = await this.repository.readOne(id);
+      if (!product) {
+        CustomError.new(errors.notFound); 
+      }
       if (user.role === 1 || (user.role === 2 && product.owner_id.toString() === user._id.toString())) {
         const response = await this.repository.update(product._id, data, { new: true });
         return response;
       } else {
-        CustomError.new(errors.badAuth)
+        CustomError.new(errors.forbidden);  
       }
     } catch (error) {
       throw error;
@@ -46,8 +49,7 @@ class ProductsService {
   destroy = async(pid, user) => {
     try {
         const product = await this.repository.readOne(pid)
-        console.log(product.owner_id)
-        console.log(user._id)
+
         if (user.role === 1) {
           const response = await this.repository.destroy(pid)
           return response

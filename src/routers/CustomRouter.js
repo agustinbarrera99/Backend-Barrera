@@ -50,29 +50,40 @@ export default class CustomRouter {
 
   policies = (arrayOfPolicies) => async (req, res, next) => {
     try {
-      if(arrayOfPolicies.includes("PUBLIC")) return next()
       let token = req.cookies["token"];
-      if (!token) return res.error401();
-      else {
+      if (token) {
         const data = jwt.verify(token, process.env.SECRET);
-        if (!data) return res.error400("Bad auth by token!");
-        else {
+        if (data) {
           const { email, role } = data;
-          if (
-            (role === 0 && arrayOfPolicies.includes("USER")) ||
-            (role === 1 && arrayOfPolicies.includes("ADMIN")) ||
-            (role === 2 && arrayOfPolicies.includes("PREM"))
-          ) {
-            const user = await users.readByEmail(email);
-            req.user = user;
-            return next();
-          } else return res.error403();
+          const user = await users.readByEmail(email);
+          req.user = user;
         }
       }
+  
+      if (arrayOfPolicies.includes("PUBLIC")) return next();
+  
+      if (!token) return res.error401();
+  
+      const data = jwt.verify(token, process.env.SECRET);
+      if (!data) return res.error400("Bad auth by token!");
+  
+      const { email, role } = data;
+      if (
+        (role === 0 && arrayOfPolicies.includes("USER")) ||
+        (role === 1 && arrayOfPolicies.includes("ADMIN")) ||
+        (role === 2 && arrayOfPolicies.includes("PREM"))
+      ) {
+        const user = await users.readByEmail(email);
+        req.user = user;
+        return next();
+      } else {
+        return res.error403();
+      }
     } catch (error) {
-      return next(error)
+      return next(error);
     }
   };
+  
 
   create(path, policies,...cbs) {
     this.router.post(path, this.responses, this.policies(policies), this.applyCbs(cbs));

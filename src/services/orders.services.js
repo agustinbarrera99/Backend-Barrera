@@ -4,14 +4,36 @@ class OrdersService {
   constructor() {
     this.repository = repository;
   }
+
   create = async (data) => {
-    await this.repository.create(data);
+    const response = await this.repository.create(data);
+    return response;
   };
-  read = async ({ filter, options }) =>
-    await this.repository.read({ filter, options });
-  readOne = async (id) => await this.repository.readOne(id);
-  update = async (data) => await this.repository.update(id, data);
-  destroy = async (id) => await this.repository.destroy(id);
+
+  read = async ({ filter, options }) => {
+    const response = await this.repository.read({ filter, options });
+    return response;
+  };
+
+  readOne = async (id) => {
+    const response = await this.repository.readOne(id);
+    return response;
+  };
+
+  update = async (id, data) => {
+    const response = await this.repository.update(id, data);
+    return response;
+  };
+
+  destroy = async (id) => {
+    const response = await this.repository.destroy(id);
+    return response;
+  };
+
+  report = async (user_id) => {
+    const response = await this.repository.report(user_id);
+    return response;
+  };
 }
 
 const service = new OrdersService();

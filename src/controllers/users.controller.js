@@ -1,5 +1,6 @@
 import users from "../data/mongo/users.mongo.js";
 import service from "../services/users.services.js";
+import CustomError from "../utils/errors/CustomError.util.js";
 
 class UsersController {
   constructor() {
@@ -16,29 +17,28 @@ class UsersController {
   };
   read = async (req, res, next) => {
     try {
-  
-      const sortAndPaginate = {
-        limit: req.query.limit || 10,
-        page: req.query.page || 1,
-        sort: { email: 1 }
+      const options = {
+        limit: parseInt(req.query.limit) || 10,
+        page: parseInt(req.query.page) || 1,
+        sort: req.query.sort ? { title: req.query.sort } : {},
+        lean: true,
+      };
+      const filter = {};
+      
+      if (req.query.email) {
+        filter.email = new RegExp(req.query.email.trim(), "i");
       }
-  
-      const filter = {}
-  
-      if(req.query.email) {
-        filter.email = new RegExp(req.query.email.trim(), 'i')
-      }
-  
-      const response = await this.service.read({filter, sortAndPaginate});
-      if (response.docs.length > 0) {
-        return res.success200(response);
+      
+      const all = await this.service.read({ filter, options });
+      if (all.docs.length > 0) {
+        return res.success200(all);
       } else {
-        CustomError.new(errors.notFound)
+        throw CustomError.new(errors.notFound);
       }
     } catch (error) {
-      return next(error)
+      return next(error);
     }
-  }
+  };
   readOne = async (req, res, next) => {
     try {
       const { uid } = req.params;

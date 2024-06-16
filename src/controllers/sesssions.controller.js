@@ -10,7 +10,7 @@ class SessionsController {
     const { email, name } = req.body;
     const { verifyCode } = req.user;
     const user = await this.service.register({ email, name, verifyCode });
-    console.log(user)
+
     try {
       return res.success201("registered");
     } catch (error) {

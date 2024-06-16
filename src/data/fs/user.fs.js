@@ -1,7 +1,9 @@
-import fs from "fs"
-import crypto from "crypto"
-import notFoundOne from "../../utils/errors/CustomError.util.js";
+import fs from "fs";
+import crypto from "crypto";
 import logger from "../../utils/logger/index.js";
+import UserDTO from "../../dto/users.dto.js";
+import CustomError from "../../utils/errors/CustomError.util.js";
+import errors from "../../utils/errors/errors.js";
 
 class UserManager {
   constructor(path) {
@@ -9,6 +11,7 @@ class UserManager {
     this.users = [];
     this.init();
   }
+
   init() {
     const fileExists = fs.existsSync(this.path);
     if (fileExists) {
@@ -20,105 +23,101 @@ class UserManager {
       fs.writeFileSync(this.path, JSON.stringify([], null, 2));
     }
   }
+
   async create(data) {
     try {
-        this.users.push(data);
-        fs.writeFileSync(this.path, JSON.stringify(this.users, null, 2));
-
-        return data;
+      data = new UserDTO(data);
+      this.users.push(data);
+      await this.saveUsers();
+      return data;
     } catch (error) {
-        logger.ERROR(error.message);
-        throw error
-    }
-}
-
-read({ filter = {}, options = {} }) {
-  try {
-    if (this.users.length === 0) {
-      const error = new Error("NOT FOUND!");
-      error.statusCode = 404;
+      logger.ERROR(error.message);
       throw error;
     }
-
-    let filteredUsers = this.users;
-    if (Object.keys(filter).length > 0) {
-      filteredUsers = this.users.filter(user => {
-        return Object.keys(filter).every(key => user[key] === filter[key]);
-      });
-    }
-
-    const { limit = 10, page = 1, sort = null } = options;
-    let paginatedUsers = filteredUsers;
-
-    if (sort) {
-      const [sortField, sortOrder] = sort.split(' ');
-      paginatedUsers = paginatedUsers.sort((a, b) => {
-        if (sortOrder === 'asc') {
-          return a[sortField] > b[sortField] ? 1 : -1;
-        } else {
-          return a[sortField] < b[sortField] ? 1 : -1;
-        }
-      });
-    }
-
-    const total = paginatedUsers.length;
-    const totalPages = Math.ceil(total / limit);
-    const startIndex = (page - 1) * limit;
-    const endIndex = page * limit;
-    const results = paginatedUsers.slice(startIndex, endIndex);
-
-    return {
-      docs: results,
-      totalDocs: total,
-      limit: limit,
-      page: page,
-      totalPages: totalPages,
-      hasNextPage: page < totalPages,
-      hasPrevPage: page > 1,
-    };
-  } catch (error) {
-    logger.ERROR(error.message);
-    throw error;
   }
-}
+
+  async read({ filter = {}, options = {} } = {}) {
+    try {
+      if (this.users.length === 0) {
+        throw CustomError.new(errors.notFound);
+      }
+
+      let filteredUsers = this.users;
+
+      if (filter.email) {
+        filteredUsers = filteredUsers.filter(user =>
+          new RegExp(filter.email, "i").test(user.email)
+        );
+      }
+
+      const { limit = 10, page = 1, sort = {} } = options;
+      let paginatedUsers = filteredUsers;
+
+      if (sort.title) {
+        const sortOrder = sort.title === "asc" ? 1 : -1;
+        paginatedUsers = paginatedUsers.sort((a, b) => {
+          if (a.title < b.title) return -1 * sortOrder;
+          if (a.title > b.title) return 1 * sortOrder;
+          return 0;
+        });
+      }
+
+      const total = paginatedUsers.length;
+      const totalPages = Math.ceil(total / limit);
+      const startIndex = (page - 1) * limit;
+      const endIndex = page * limit;
+      const results = paginatedUsers.slice(startIndex, endIndex);
+
+      return {
+        docs: results,
+        totalDocs: total,
+        limit: limit,
+        page: page,
+        totalPages: totalPages,
+        hasNextPage: page < totalPages,
+        hasPrevPage: page > 1,
+      };
+    } catch (error) {
+      logger.ERROR(error.message);
+      throw error;
+    }
+  }
 
   async readOne(id) {
     try {
-        const one = this.users.find(x => x._id === id)
-        if (!one) {
-            const error = new Error("user not found");
-            notFoundError.statusCode = 404
-            throw error
-        } else {
-            return one;
-        }
+      const one = this.users.find((x) => x._id === id);
+      if (!one) {
+        const error = new Error("User not found");
+        error.statusCode = 404;
+        throw error;
+      }
+      return one;
     } catch (error) {
-        logger.ERROR(error.message);
-        throw error
+      logger.ERROR(error.message);
+      throw error;
     }
   }
 
   async readByEmail(email) {
     try {
-      const one = this.users.find(x => x.email === email)
-      if (!one) {
-        return null
-      } else {
-        return one
-      }
+      const one = this.users.find((x) => x.email === email);
+      return one || null;
     } catch (error) {
       logger.ERROR(error.message);
-      throw error
+      throw error;
     }
   }
 
   async destroy(id) {
     try {
-      const one = this.readOne(id);
-      notFoundOne(one)
-      this.users = this.users.filter(x => x._id !== id);
-      const jsonData = JSON.stringify(this.users, null, 2);
-      await fs.promises.writeFile(this.path, jsonData);
+      const one = await this.readOne(id);
+      if (!one) {
+        const error = new Error("User not found");
+        error.statusCode = 404;
+        throw error;
+      }
+      this.users = this.users.filter((x) => x._id !== id);
+      await this.saveUsers();
       return one;
     } catch (error) {
       logger.ERROR(error.message);
@@ -126,24 +125,28 @@ read({ filter = {}, options = {} }) {
     }
   }
 
-  async update(eid, data) {
+  async update(id, data) {
     try {
-      const one = this.readOne(eid);
-      notFoundOne(one)
-      for (let x in data) {
-        one[x] = data[x]
+      const one = await this.readOne(id);
+      if (!one) {
+        const error = new Error("User not found");
+        error.statusCode = 404;
+        throw error;
       }
-      const jsonData = JSON.stringify(this.users, null, 2);
-      await fs.promises.writeFile(this.path, jsonData);
+      Object.assign(one, data);
+      await this.saveUsers();
       return one;
     } catch (error) {
       logger.ERROR(error.message);
       throw error;
     }
+  }
+
+  async saveUsers() {
+    const jsonData = JSON.stringify(this.users, null, 2);
+    await fs.promises.writeFile(this.path, jsonData);
   }
 }
 
-
 const user = new UserManager("./src/data/fs/files/users.json");
-
-export default user
+export default user;
