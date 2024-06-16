@@ -1,6 +1,7 @@
 import fs from "fs";
 import crypto from "crypto";
-import logger from "../../utils/logger/index.js"
+import logger from "../../utils/logger/index.js";
+import OrderDTO from "../../dto/orders.dto.js";
 
 class OrdersManager {
   constructor(pathToUsers, pathToProducts, pathToOrders) {
@@ -25,109 +26,115 @@ class OrdersManager {
 
   async create(data) {
     try {
-      const { uid, pid, quantity, state } = data;
-  
-      if (!uid || !pid || !quantity || !state) {
-        const notDataError =  new Error("Enter all necessary data (uid, pid, quantity, state)");
-        notDataError.statusCode = 400
-        throw notDataError
-      }
       const users = JSON.parse(fs.readFileSync(this.pathToUsers, "utf-8"));
-      const userExists = users.some((user) => user._id === uid);
+      const userExists = users.some((user) => user._id === data.user_id);
       if (!userExists) {
-        const notUserIdError = new Error(`There is not any user with ID: ${uid}`);
-        notUserIdError.statusCode = 400
-        throw notIdError
+        const notUserIdError = new Error(`There is not any user with ID: ${data.user_id}`);
+        notUserIdError.statusCode = 400;
+        throw notUserIdError;
       }
-      const products = JSON.parse(
-        fs.readFileSync(this.pathToProducts, "utf-8")
-      );
-      const productExists = products.some((product) => product._id === pid);
+      
+      const products = JSON.parse(fs.readFileSync(this.pathToProducts, "utf-8"));
+      const productExists = products.some((product) => product._id === data.product_id);
       if (!productExists) {
-        const notProductIdError = new Error(`There is not any product with ID: ${pid}`);
-        notProductIdError.statusCode = 400
-        throw notProductIdError
+        const notProductIdError = new Error(`There is not any product with ID: ${data.product_id}`);
+        notProductIdError.statusCode = 400;
+        throw notProductIdError;
       }
 
+      data = new OrderDTO(data);
       this.orders.push(data);
       fs.writeFileSync(this.pathToOrders, JSON.stringify(this.orders, null, 2));
 
       return data;
     } catch (error) {
       logger.ERROR(error.message);
-      throw error
+      throw error;
     }
   }
 
-  async read() {
+  async read({ filter, options }) {
     try {
-      if(this.orders.length === 0) {
-        const notOrderError = new Error("there are not orders")
-        notOrderError.statusCode = 400
-        throw notOrderError
-      }
-      const all = this.orders;
-      return all
+      const all = this.orders.filter(order => 
+        Object.keys(filter).every(key => order[key] === filter[key])
+      );
+
+      return { docs: all, ...options };
     } catch (error) {
       logger.ERROR(error.message);
-      throw error
+      throw error;
     }
   }
 
-  async readOne(uid) {
+  async readOne(id) {
     try {
-      const orders = JSON.parse(fs.readFileSync(this.pathToOrders, "utf-8"))
-      const userOrders = orders.filter((order) => order._id === uid)
-  
-      if (userOrders.length === 0) {
-        const notOrderError = new Error(`the user with id: ${uid} doesn't have orders`);
-        notOrderError.statusCode = 400
-        throw notOrderError
+      const one = this.orders.find(order => order._id === id);
+      if (!one) {
+        const notOrderError = new Error(`No order found with ID ${id}`);
+        notOrderError.statusCode = 400;
+        throw notOrderError;
       }
-      return userOrders;
+      return one;
     } catch (error) {
       logger.ERROR(error.message);
-      throw error
+      throw error;
     }
   }
 
-  update(oid, quantity, state) {
+  async update(id, data) {
     try {
-      const orderToUpdate = this.orders.find((order) => order.oid === oid);
-      if (!orderToUpdate) {
-        const notOrderError = new Error(`No order found with ID ${oid}`);
-        notOrderError.statusCode = 400
-        throw notOrderError
-      }
-
-      if (quantity !== undefined) {
-        orderToUpdate.quantity = quantity;
-      }
-
-      if (state !== undefined) {
-        orderToUpdate.state = state;
-      }
-
-      fs.writeFileSync(this.pathToOrders, JSON.stringify(this.orders, null, 2));
-      return orderToUpdate;
-    } catch (error) {
-      logger.ERROR(error.message);
-      throw error
-    }
-  }
-
-  destroy(oid) {
-    try {
-      const index = this.orders.findIndex(order => order._id === oid);
+      const index = this.orders.findIndex(order => order._id === id);
       if (index === -1) {
-        const notOrderError = new Error(`No order found with ID ${oid}`);
+        const notOrderError = new Error(`No order found with ID ${id}`);
+        notOrderError.statusCode = 400;
+        throw notOrderError;
+      }
+
+      const updatedOrder = { ...this.orders[index], ...data };
+      this.orders[index] = updatedOrder;
+      fs.writeFileSync(this.pathToOrders, JSON.stringify(this.orders, null, 2));
+      return updatedOrder;
+    } catch (error) {
+      logger.ERROR(error.message);
+      throw error;
+    }
+  }
+
+  async destroy(id) {
+    try {
+      const index = this.orders.findIndex(order => order._id === id);
+      if (index === -1) {
+        const notOrderError = new Error(`No order found with ID ${id}`);
         notOrderError.statusCode = 404;
         throw notOrderError;
       }
-      
+
       const deletedOrder = this.orders.splice(index, 1)[0];
       fs.writeFileSync(this.pathToOrders, JSON.stringify(this.orders, null, 2));
       return deletedOrder;
+    } catch (error) {
+      logger.ERROR(error.message);
+      throw error;
+    }
+  }
+
+  async report(uid) {
+    try {
+      const userOrders = this.orders.filter(order => order.user_id === uid);
+
+      const report = userOrders.reduce((acc, order) => {
+        const product = JSON.parse(fs.readFileSync(this.pathToProducts, "utf-8"))
+          .find(product => product._id === order.product_id);
+
+        const price = parseFloat(product.price);
+        const quantity = parseInt(order.quantity, 10);
+        const subtotal = price * quantity;
+
+        acc.total += subtotal;
+        return acc;
+      }, { user_id: uid, total: 0, date: new Date() });
+
+      return report;
     } catch (error) {
       logger.ERROR(error.message);
       throw error;

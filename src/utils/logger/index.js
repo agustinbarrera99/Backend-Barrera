@@ -1,5 +1,4 @@
 import argsUtil from "../../utils/args.util.js";
-//   si uso winston en la consola me sale [object, object]
 const environment = argsUtil.env;
 
 let logger;
@@ -13,6 +12,9 @@ switch (environment) {
     const { default: winstonDev } = await import("./WinstonDev.util.js");
     logger = winstonDev;
     break;
+  case "test":
+    const { default: winstonTest } = await import("./WinstonDev.util.js");
+    logger = winstonTest;
   default:
     break;
 }

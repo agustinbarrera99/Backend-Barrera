@@ -8,15 +8,14 @@ class UsersService {
   create = async (data) => {
     try {
       const user = await this.repository.create(data);
-      console.log(user)
       return user;
     } catch (error) {
       throw error;
     }
   };
-  read = async({filter, sortAndPaginate}) => {
+  read = async(filterAndOptions) => {
     try {
-      const response = await this.repository.read({filter, sortAndPaginate})
+      const response = await this.repository.read(filterAndOptions)
       return response
     } catch (error) {
       throw error      

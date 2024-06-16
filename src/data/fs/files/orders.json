@@ -12,5 +12,14 @@
     "pid": "227b24e3b69a7445f0c43657",
     "quantity": 1,
     "state": "reserved"
+  },
+  {
+    "_id": "b2b7428f6a3336b7d3d36d85",
+    "user_id": "a54b502e9537910294a4c690",
+    "product_id": "eef69b7fc9b074433922d696",
+    "quantity": 3,
+    "state": "reserved",
+    "updatedAt": "2024-06-16T19:37:59.873Z",
+    "createdAt": "2024-06-16T19:37:59.873Z"
   }
 ]

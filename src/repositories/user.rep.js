@@ -11,8 +11,8 @@ class UsersRep {
         const user = await this.model.create(data)
         return user
     }
-    read = async() => {
-        const response = await this.model.read({filter, options})
+    read = async({filter, sortAndPaginate}) => {
+        const response = await this.model.read({filter, sortAndPaginate})
         return response
     }
     readOne = async(id) => {

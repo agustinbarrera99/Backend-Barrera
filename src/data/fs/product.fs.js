@@ -1,7 +1,8 @@
-import fs from "fs"
-import crypto from "crypto"
-import notFoundOne from "../../utils/errors/CustomError.util.js";
+import fs from "fs";
+import crypto from "crypto";
+import CustomError from "../../utils/errors/CustomError.util.js";
 import logger from "../../utils/logger/index.js";
+import errors from "../../utils/errors/errors.js";
 
 class ProductManager {
   constructor(path) {
@@ -24,42 +25,44 @@ class ProductManager {
 
   async create(data) {
     try {
-  
       this.products.push(data);
       fs.writeFileSync(this.path, JSON.stringify(this.products, null, 2));
       return data;
     } catch (error) {
       logger.ERROR(error.message);
-      return error; 
+      throw error; 
     }
   }
 
   async read({ filter = {}, options = {} }) {
     try {
       if (this.products.length === 0) {
-        const error = new Error("NOT FOUND!");
-        error.statusCode = 404;
-        throw error;
+        throw CustomError.new(errors.notFound);
       }
 
       let filteredProducts = this.products;
-      if (Object.keys(filter).length > 0) {
-        filteredProducts = this.products.filter(product => {
-          return Object.keys(filter).every(key => product[key] === filter[key]);
-        });
+
+      if (filter.title) {
+        filteredProducts = filteredProducts.filter(product =>
+          new RegExp(filter.title, "i").test(product.title)
+        );
       }
 
-      const { limit = 10, page = 1, sort = null } = options;
+      if (filter.owner_id) {
+        filteredProducts = filteredProducts.filter(product =>
+          product.owner_id !== filter.owner_id
+        );
+      }
+
+      const { limit = 10, page = 1, sort = {} } = options;
       let paginatedProducts = filteredProducts;
 
-      if (sort) {
-        const [sortField, sortOrder] = sort.split(' ');
+      if (sort.title) {
+        const sortOrder = sort.title === "asc" ? 1 : -1;
         paginatedProducts = paginatedProducts.sort((a, b) => {
-          if (sortOrder === 'asc') {
-            return a[sortField] > b[sortField] ? 1 : -1;
-          } else {
-            return a[sortField] < b[sortField] ? 1 : -1;
-          }
+          if (a.title < b.title) return -1 * sortOrder;
+          if (a.title > b.title) return 1 * sortOrder;
+          return 0;
         });
       }
 
@@ -86,27 +89,27 @@ class ProductManager {
 
   async readOne(id) {
     try {
-        const one = this.products.find(x => x._id === id)
-        if (!one) {
-          const notFoundError = new Error("NOT FOUND!");
-          notFoundError.statusCode = 404; 
-          throw notFoundError;
-        } else {
-            return one;
-        }
+      const one = this.products.find(x => x._id === id);
+      if (!one) {
+        throw CustomError.new(errors.notFound);
+      } else {
+        return one;
+      }
     } catch (error) {
       logger.ERROR(error.message);
-        throw error
+      throw error;
     }
   }
 
   async destroy(id) {
     try {
-      const one = this.readOne(id);
-      notFoundOne(one)
+      const one = await this.readOne(id);
+
+      if (!one) {
+        throw CustomError.new(errors.notFound);
+      }
       this.products = this.products.filter(x => x._id !== id);
-      const jsonData = JSON.stringify(this.events, null, 2);
-      await fs.promises.writeFile(this.path, jsonData);
+      await this.saveProducts();
       return one;
     } catch (error) {
       logger.ERROR(error.message);
@@ -114,25 +117,26 @@ class ProductManager {
     }
   }
 
-  async update(eid, data) {
+  async update(id, data) {
     try {
-      const one = this.readOne(eid)
-      notFoundOne(one)
-      for (let x in data) {
-        one[x] = data[x] 
+      const one = await this.readOne(id);
+      for (let key in data) {
+        one[key] = data[key];
       }
-      const jsonData = JSON.stringify(this.products, null, 2)
-      await fs.promises.writeFile(this.path, jsonData)
-      return one
+      const jsonData = JSON.stringify(this.products, null, 2);
+      await fs.promises.writeFile(this.path, jsonData);
+      return one;
     } catch (error) {
       logger.ERROR(error.message);
-      throw error
+      throw error;
     }
+  }
+  async saveProducts() {
+    const jsonData = JSON.stringify(this.products, null, 2);
+    await fs.promises.writeFile(this.path, jsonData);
   }
 }
 
-
-
 const products = new ProductManager("./src/data/fs/files/products.json");
 
-export default products
+export default products;

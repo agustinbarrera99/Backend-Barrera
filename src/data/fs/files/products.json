@@ -1,58 +1,32 @@
 [
   {
-    "id": "26bb8eef05a29cce7b95b828",
-    "title": "mousepad",
-    "photo": "https://www.venex.com.ar/products_images/1602176217_1602175525_flickl_pngweb_51.png",
-    "price": 30,
-    "stock": 40
-  },
-  {
-    "id": "dc740d098b2fe2ce5116f8dc",
-    "title": "mouse",
-    "photo": "https://row.hyperx.com/cdn/shop/files/hyperx_pulsefire_haste_2_back_angled.jpg?v=1700189332",
-    "price": 50,
-    "stock": 40
-  },
-  {
-    "id": "21676cae9ace07e393db8095",
-    "title": "memoria ram",
-    "photo": "https://hard-digital.com.ar/files/Memoria%20Ram%208Gb%20Ddr4%203200mhz%20Kingston%20Hyperx%20Fury%20Beast%20Rgb/1.jpg",
+    "_id": "66387d71df0b373edf4f552b",
+    "title": "producto premium fs otro usuario",
+    "photo": "https://jkfenner.com/wp-content/uploads/2019/11/default.jpg",
     "price": 200,
-    "stock": 21
+    "stock": 40,
+    "owner_id": "a54b502e9537910294a4c690",
+    "updatedAt": "2024-06-16T03:54:05.651Z",
+    "createdAt": "2024-06-16T03:54:05.651Z"
   },
   {
-    "id": "ff88d62e86657a8d007cdeb7",
-    "title": "usb",
-    "photo": "https://argentina.solutekla.com/photo/1/kingston/memorias/memoria_usb_8gb_30_datatraveler_100_g3/memoria_usb_8gb_30_datatraveler_100_g3_0001",
-    "price": 30,
-    "stock": 10
+    "_id": "a6f329437d1c4e7b65ab89fd",
+    "title": "producto premium fs solo admin",
+    "photo": "https://jkfenner.com/wp-content/uploads/2019/11/default.jpg",
+    "price": 200,
+    "stock": 40,
+    "owner_id": "a4638d91a822421c81d911fd",
+    "updatedAt": "2024-06-16T05:59:32.698Z",
+    "createdAt": "2024-06-16T05:59:32.698Z"
   },
   {
-    "id": "de27e8758810cf71cec60c38",
-    "title": "gabinete",
-    "photo": "https://www.soscomputacion.com.ar/14725-thickbox_default/gabinete-aerocool-cyclon-black-gaming-led-rgb-gamer-sin-fuente.jpg",
-    "price": 80,
-    "stock": 10
-  },
-  {
-    "id": "42341f412045a16c89e705b0",
-    "title": "cable HDMI",
-    "photo": "https://acdn.mitiendanube.com/stores/896/208/products/746759-mla29923369702_042019-o-40c53c190e73ddc51b15559898728671-480-0.jpg",
-    "price": 30,
-    "stock": 20
-  },
-  {
-    "id": "4f67985e18085be9512f5099",
-    "title": "notebook",
-    "photo": "https://acdn.mitiendanube.com/stores/002/003/170/products/1911-52a62a07d0d6dbc39716618752269056-1024-1024.jpg",
-    "price": "200",
-    "stock": "30"
-  },
-  {
-    "id": "999c99a38ca7380e2ee73922",
-    "title": "auricular",
-    "photo": "https://tccommercear.vtexassets.com/arquivos/ids/158062/157141-800-auto.jpg.png?v=638331718411530000",
-    "price": "50",
-    "stock": "132"
+    "_id": "eef69b7fc9b074433922d696",
+    "title": "producto premium fs solo admin",
+    "photo": "https://jkfenner.com/wp-content/uploads/2019/11/default.jpg",
+    "price": 200,
+    "stock": 40,
+    "owner_id": "a4638d91a822421c81d911fd",
+    "updatedAt": "2024-06-16T06:07:46.850Z",
+    "createdAt": "2024-06-16T06:07:46.850Z"
   }
 ]

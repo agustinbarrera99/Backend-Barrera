@@ -1,20 +1,22 @@
-// import orders from "../../data/fs/orders.fs.js";
 import CustomRouter from "../CustomRouter.js";
-import { create, read, update, readOne } from "../../controllers/orders.controller.js";
+import {
+  create,
+  read,
+  readOne,
+  update,
+  destroy,
+  report,
+} from "../../controllers/orders.controller.js";
 
 class OrdersRouter extends CustomRouter {
   init() {
-    this.create("/", ["ADMIN", "PREM"], create);
-    
-    this.read("/", ["USER", "ADMIN", "PREM"], read);
-    
-    this.update("/:oid", update)
-    
-    this.read("/total/:uid", readOne)
-    
-    this.destroy("/:oid", )
+    this.create("/", ["USER", "PREM"], create);
+    this.read("/", ["USER", "PREM"], read);
+    this.read("/tickets", ["USER", "PREM"], report);
+    this.read("/:oid", ["USER", "PREM"], readOne);
+    this.update("/:oid", ["USER", "PREM"], update);
+    this.destroy("/:oid", ["USER", "PREM"], destroy);
   }
 }
 
 export default OrdersRouter;
-

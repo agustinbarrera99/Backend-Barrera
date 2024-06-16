@@ -1,20 +1,98 @@
 [
   {
-    "id": "f348594d7fa6a7498e1fcbaa",
-    "name": "lucas",
-    "photo": "url",
-    "email": "lucas@mail"
+    "_id": "12aec23dd014e855a38f73f6",
+    "photo": "https://jkfenner.com/wp-content/uploads/2019/11/default.jpg",
+    "email": "lucas@usuario.com",
+    "role": 0,
+    "password": "$2b$10$TVTt.180k7HI1m0KtGw60eijxx0dSNeGwKKLS6Lor7WGvA3C3D1FO",
+    "verified": true,
+    "updatedAt": "2024-06-16T02:57:29.646Z",
+    "createdAt": "2024-06-16T02:57:29.646Z"
   },
   {
-    "id": "ba504bcb7d11f84a94c96dfb",
-    "name": "agustin",
-    "photo": "url",
-    "email": "agustin@coder"
+    "_id": "a54b502e9537910294a4c690",
+    "photo": "https://jkfenner.com/wp-content/uploads/2019/11/default.jpg",
+    "email": "lucas@premium.com",
+    "role": 2,
+    "password": "$2b$10$YsKMdJ8.cP/ycrT.sJJEDexz.oRWyHFjHrFjMdqL.9HfvgWTtYqAW",
+    "verified": true,
+    "updatedAt": "2024-06-16T03:14:23.025Z",
+    "createdAt": "2024-06-16T03:14:23.025Z"
   },
   {
-    "id": "6ed1068f5c0f9bb5922a1eac",
-    "name": "juan",
-    "photo": "url",
-    "email": "juan@coder"
+    "_id": "5384f6f6b85af21291cd79b8",
+    "photo": "https://jkfenner.com/wp-content/uploads/2019/11/default.jpg",
+    "email": "lucas@premium2.com",
+    "role": 0,
+    "password": "$2b$10$5kJs71SCXe5w0U6JVMcMtOC29WlueVMzVjS3agNUM0CM1WDRaLiwe",
+    "verified": false,
+    "updatedAt": "2024-06-16T03:53:40.389Z",
+    "createdAt": "2024-06-16T03:53:40.389Z"
+  },
+  {
+    "_id": "0757d18f8dbca6a6d33bfc34",
+    "photo": "https://jkfenner.com/wp-content/uploads/2019/11/default.jpg",
+    "email": "lucas@admin1.com",
+    "role": 0,
+    "password": "$2b$10$.oWRgg5vuUITzgqqPRLj4uOS0lLBwWpDHwZ8Y5vPiEYWcOtiKZ6fi",
+    "verifyCode": "b6d329af74bb1ce18acd0730",
+    "verified": false,
+    "updatedAt": "2024-06-16T04:24:33.123Z",
+    "createdAt": "2024-06-16T04:24:33.123Z"
+  },
+  {
+    "_id": "693cb9cf01f21b77cd335e5e",
+    "photo": "https://jkfenner.com/wp-content/uploads/2019/11/default.jpg",
+    "email": "lucas@admin2.com",
+    "role": 0,
+    "password": "$2b$10$v9eJiRf27MFieLP9WwkXruyylK7FtDlw5rGCLuahjCuPL4zdN9gGy",
+    "verifyCode": "9c610969add5a59378478414",
+    "verified": false,
+    "updatedAt": "2024-06-16T04:24:58.974Z",
+    "createdAt": "2024-06-16T04:24:58.974Z"
+  },
+  {
+    "_id": "b520d3078bb7ca6852e42e4d",
+    "photo": "https://jkfenner.com/wp-content/uploads/2019/11/default.jpg",
+    "email": "lucas@admin3.com",
+    "role": 0,
+    "password": "$2b$10$14yo.8lYMP/8cYAS7sqM0OQ1HLGLY0wWPWTP07jJ947X3/sfAXXKW",
+    "verifyCode": "9c6be18a3dc72eb5d360c438",
+    "verified": false,
+    "updatedAt": "2024-06-16T04:25:11.341Z",
+    "createdAt": "2024-06-16T04:25:11.341Z"
+  },
+  {
+    "_id": "ceb2adef38964d4eaf9b68b8",
+    "photo": "https://jkfenner.com/wp-content/uploads/2019/11/default.jpg",
+    "email": "lucas@admin4.com",
+    "role": 0,
+    "password": "$2b$10$4D2qH49Vwib40tHkTKIeaOBXcZZos7eNThqyXTV3RPYeFFdEXVG3e",
+    "verifyCode": "ba52f0b4031de3dc1d6cdb87",
+    "verified": false,
+    "updatedAt": "2024-06-16T04:25:50.474Z",
+    "createdAt": "2024-06-16T04:25:50.474Z"
+  },
+  {
+    "_id": "a4638d91a822421c81d911fd",
+    "photo": "https://jkfenner.com/wp-content/uploads/2019/11/default.jpg",
+    "email": "lucas@admin5.com",
+    "role": 1,
+    "password": "$2b$10$nkwHb/2lpM.Fc7feFNltMOUsw02j9SQVBluQsezOMzH5bTKn8Poeq",
+    "verifyCode": "b1bc7caeabd73402dca610b6",
+    "verified": true,
+    "updatedAt": "2024-06-16T04:26:18.824Z",
+    "createdAt": "2024-06-16T04:26:18.824Z"
+  },
+  {
+    "_id": "c52082d1d1517ba9a162a712",
+    "name": "agustincreadoporadmin",
+    "photo": "https://jkfenner.com/wp-content/uploads/2019/11/default.jpg",
+    "email": "agustin@admin.com",
+    "role": 2,
+    "password": "$2b$10$U8IeloZBSdMdILVmevZGduCJA9gTBQ878gX3W2kBwqolarS57FFDm",
+    "verified": false,
+    "updatedAt": "2024-06-16T06:01:23.897Z",
+    "createdAt": "2024-06-16T06:01:23.897Z"
   }
 ]

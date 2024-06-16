@@ -1,88 +1,108 @@
-import orders from "../data/mongo/orders.mongo.js";
-import users from "../data/mongo/users.mongo.js"
+import service from "../services/orders.services.js";
 import CustomError from "../utils/errors/CustomError.util.js";
 import errors from "../utils/errors/errors.js";
-import products from "../data/mongo/products.mongo.js";
+import repository from "../repositories/product.rep.js";
 
 class OrdersController {
   constructor() {
-    this.model = orders;
+    this.service = service;
   }
 
   create = async (req, res, next) => {
     try {
       const data = req.body;
       data.user_id = req.user._id;
-      console.log(data)
-      const product = await products.readOne(data.product_id);
-      console.log(product)
+
+      const product = await repository.readOne(data.product_id);
       if (req.user.role === 2 && product.owner_id.toString() === req.user._id.toString()) {
         throw CustomError.new(errors.message("No puedes agregar tus propios productos al carrito"));
       }
-  
-      const response = await this.model.create(data);
+      const response = await this.service.create(data);
       return res.success201(response);
     } catch (error) {
       return next(error);
     }
   };
-  read =  async (req, res, next) => {
+
+  read = async (req, res, next) => {
     try {
-      const user = req.user
-      const filter = {
-        user_id: user._id
-      };
-      const all = await this.model.read({ filter });
+      const user = req.user;
+      const filter = { user_id: user._id };
+      const all = await this.service.read({ filter });
       if (all.docs.length > 0) {
         return res.success200(all);
+      } else {
+        CustomError.new(errors.notFound);
       }
-      CustomError.new(errors.notFound)
     } catch (error) {
       return next(error);
     }
-  }
-  update =  async (req, res, next) => {
+  };
+
+  readOne = async (req, res, next) => {
     try {
-      const { oid } = req.params
-      const data = req.body
-      const response = await this.model.update(oid, data)
-      if (response ) {
+      const { oid } = req.params;
+      const response = await this.service.readOne(oid);
+      if (response) {
         return res.success200(response);
+      } else {
+        CustomError.new(errors.notFound);
       }
-      CustomError.new(errors.notFound)
     } catch (error) {
-      next(error)
+      return next(error);
     }
-  }
-  readOne =  async (req, res, next) => {
+  };
+
+  update = async (req, res, next) => {
     try {
-      const {uid} = req.params
-  
-      const response = await this.model.report(uid)
-      if (response ) {
-        return res.success200(response);
+      const { oid } = req.params;
+      const data = req.body;
+      const order = await this.service.readOne(oid);
+      if (order.user_id.toString() !== req.user._id.toString()) {
+        throw CustomError.new(errors.message("No puedes editar ordenes que no te pertenecen"));
       }
-      CustomError.new(errors.notFound)
+      const response = await this.service.update(oid, data);
+      if (response) {
+        return res.success200(response);
+      } else {
+        CustomError.new(errors.notFound);
+      }
     } catch (error) {
-      next(error)
+      return next(error);
     }
-  }
-  destroy = async(req, res, next) => {
+  };
+
+  destroy = async (req, res, next) => {
     try {
-      const { oid } = req.params
-      const response = await this.model.destroy(oid)
-      if (response ) {
-        return res.success200(response);
+      const { oid } = req.params;
+      const order = await this.service.readOne(oid);
+
+      if (order.user_id.toString() !== req.user._id.toString()) {
+        throw CustomError.new(errors.message("No puedes eliminar ordenes de otros usuarios"));
       }
-      CustomError.new(errors.notFound)
+      const response = await this.service.destroy(oid);
+      if (response) {
+        return res.success200(response);
+      } else {
+        CustomError.new(errors.notFound);
+      }
     } catch (error) {
-      return next(error)
+      return next(error);
     }
-  
-  }
+  };
+
+  report = async (req, res, next) => {
+    try {
+      const user_id = req.user._id;
+      const response = await this.service.report(user_id);
+      return res.success200(response);
+    } catch (error) {
+      return next(error);
+    }
+  };
 }
 
-export default OrdersController
-const controller = new OrdersController()
+export default OrdersController;
+const controller = new OrdersController();
+export const { create, read, readOne, update, destroy, report } = controller;
 
-export const {create, read, readOne, update, destroy } = controller

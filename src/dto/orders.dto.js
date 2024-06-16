@@ -7,7 +7,7 @@ class OrderDTO {
         this.user_id = data.user_id
         this.product_id = data.product_id
         this.quantity = data.quantity || 1
-        this.state = data.state || reserved
+        this.state = data.state || "reserved"
         argsUtil.env === "test" && (this.updatedAt = new Date());
         argsUtil.env === "test" && (this.createdAt = new Date());
     }
