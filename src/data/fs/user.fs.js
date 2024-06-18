@@ -1,5 +1,4 @@
 import fs from "fs";
-import crypto from "crypto";
 import logger from "../../utils/logger/index.js";
 import UserDTO from "../../dto/users.dto.js";
 import CustomError from "../../utils/errors/CustomError.util.js";

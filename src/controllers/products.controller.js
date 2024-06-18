@@ -1,7 +1,6 @@
 import service from "../services/products.services.js";
 import CustomError from "../utils/errors/CustomError.util.js";
 import errors from "../utils/errors/errors.js";
-import logger from "../utils/logger/index.js";
 
 class ProductsController {
   constructor() {
@@ -9,7 +8,6 @@ class ProductsController {
   }
   create = async (req, res, next) => {
     try {
-      console.log(req.user)
       const data = req.body;
       data.owner_id = req.user._id;
       const response = await this.service.create(data);

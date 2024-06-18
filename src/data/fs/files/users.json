@@ -23,9 +23,9 @@
     "_id": "5384f6f6b85af21291cd79b8",
     "photo": "https://jkfenner.com/wp-content/uploads/2019/11/default.jpg",
     "email": "lucas@premium2.com",
-    "role": 0,
+    "role": 2,
     "password": "$2b$10$5kJs71SCXe5w0U6JVMcMtOC29WlueVMzVjS3agNUM0CM1WDRaLiwe",
-    "verified": false,
+    "verified": true,
     "updatedAt": "2024-06-16T03:53:40.389Z",
     "createdAt": "2024-06-16T03:53:40.389Z"
   },
@@ -94,5 +94,17 @@
     "verified": false,
     "updatedAt": "2024-06-16T06:01:23.897Z",
     "createdAt": "2024-06-16T06:01:23.897Z"
+  },
+  {
+    "_id": "c9ab8cdd7a288f09013bc3c8",
+    "name": "lucas",
+    "photo": "https://jkfenner.com/wp-content/uploads/2019/11/default.jpg",
+    "email": "lucas@premium10.com",
+    "role": 0,
+    "password": "$2b$10$4PGToshUgAyRc9j7qhE.gOiod9cWGdZwdL2RMoejHE6hP4BgIQe7S",
+    "verifyCode": "29e69d0caa2cd37a662a30f8",
+    "verified": false,
+    "updatedAt": "2024-06-16T20:41:08.933Z",
+    "createdAt": "2024-06-16T20:41:08.933Z"
   }
 ]

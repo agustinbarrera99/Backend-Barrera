@@ -5,16 +5,19 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "start": "nodemon server.js --env prod",
+    "start": "node server.js --env prod",
     "dev": "nodemon ./server.js --env dev",
     "test": "nodemon ./server.js --env test",
     "mocks": "node ./src/data/mocks/products.mock.js --env dev",
-    "super": "mocha ./test/supertest"
+    "super": "mocha ./test/supertest",
+    "performance": "artillery run ./test/flow/flow.yaml --output ./test/flow/flow.json",
+    "report": "artillery report ./test/flow/flow.json"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "artillery-plugin-metrics-by-endpoint": "^1.9.0",
     "bcrypt": "^5.1.1",
     "commander": "^12.0.0",
     "connect-mongo": "^5.1.0",
@@ -36,6 +39,7 @@
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
     "socket.io": "^4.7.4",
+    "stripe": "^15.12.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0",
     "winston": "^3.13.0"

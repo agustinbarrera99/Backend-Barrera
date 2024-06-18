@@ -1,0 +1,263 @@
+openapi: 3.0.0
+info:
+  title: Orders API
+  version: 1.0.0
+paths:
+  /api/orders:
+    post:
+      summary: Create a new order
+      tags:
+        - Orders
+      security:
+        - cookieAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                product_id:
+                  type: string
+                  description: ID of the product
+                quantity:
+                  type: integer
+                  description: Quantity of the product
+              required:
+                - product_id
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '401':
+          $ref: '#/components/responses/res401'
+        '403':
+          $ref: '#/components/responses/res403'
+        '500':
+          $ref: '#/components/responses/res500'
+
+    get:
+      summary: Get all orders
+      tags:
+        - Orders
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'
+        '401':
+          $ref: '#/components/responses/res401'
+        '403':
+          $ref: '#/components/responses/res403'
+        '500':
+          $ref: '#/components/responses/res500'
+
+  /api/orders/{oid}:
+    get:
+      summary: Get a specific order by ID
+      tags:
+        - Orders
+      security:
+        - cookieAuth: []
+      parameters:
+        - in: path
+          name: oid
+          required: true
+          schema:
+            type: string
+          description: ID of the order to retrieve
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '401':
+          $ref: '#/components/responses/res401'
+        '403':
+          $ref: '#/components/responses/res403'
+        '404':
+          $ref: '#/components/responses/res404'
+        '500':
+          $ref: '#/components/responses/res500'
+
+    put:
+      summary: Update a specific order by ID
+      tags:
+        - Orders
+      security:
+        - cookieAuth: []
+      parameters:
+        - in: path
+          name: oid
+          required: true
+          schema:
+            type: string
+          description: ID of the order to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '401':
+          $ref: '#/components/responses/res401'
+        '403':
+          $ref: '#/components/responses/res403'
+        '404':
+          $ref: '#/components/responses/res404'
+        '500':
+          $ref: '#/components/responses/res500'
+
+    delete:
+      summary: Delete a specific order by ID
+      tags:
+        - Orders
+      security:
+        - cookieAuth: []
+      parameters:
+        - in: path
+          name: oid
+          required: true
+          schema:
+            type: string
+          description: ID of the order to delete
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '401':
+          $ref: '#/components/responses/res401'
+        '403':
+          $ref: '#/components/responses/res403'
+        '404':
+          $ref: '#/components/responses/res404'
+        '500':
+          $ref: '#/components/responses/res500'
+
+components:
+  schemas:
+    Order:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: ID of the order
+        user_id:
+          type: string
+          description: ID of the user who placed the order
+        product_id:
+          type: string
+          description: ID of the product in the order
+        quantity:
+          type: integer
+          description: Quantity of the product in the order
+        state:
+          type: string
+          enum: [reserved, paid, delivered]
+          description: State of the order
+        createdAt:
+          type: string
+          format: date-time
+          description: Date and time when the order was created
+        updatedAt:
+          type: string
+          format: date-time
+          description: Date and time when the order was last updated
+      example:
+        _id: asd23124212
+        user_id: user123
+        product_id: prod123
+        quantity: 2
+        state: reserved
+        createdAt: '2024-06-17T12:00:00Z'
+        updatedAt: '2024-06-17T12:00:00Z'
+
+  responses:
+    res401:
+      description: Unauthorized response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                type: number
+                description: Status code of the response
+              message:
+                type: string
+                description: Error message
+            example:
+              statusCode: 401
+              message: "Bad Auth!"
+
+    res403:
+      description: Forbidden response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                type: number
+                description: Status code of the response
+              message:
+                type: string
+                description: Error message
+            example:
+              statusCode: 403
+              message: "Forbidden"
+
+    res404:
+      description: Not Found response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                type: number
+                description: Status code of the response
+              message:
+                type: string
+                description: Error message
+            example:
+              statusCode: 404
+              message: "Order not found"
+
+    res500:
+      description: Internal Server Error response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                type: number
+                description: Status code of the response
+              message:
+                type: string
+                description: Error message
+            example:
+              statusCode: 500
+              message: "Internal Server Error"

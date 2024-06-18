@@ -1,4 +1,3 @@
-import users from "../data/mongo/users.mongo.js";
 import service from "../services/users.services.js";
 import CustomError from "../utils/errors/CustomError.util.js";
 

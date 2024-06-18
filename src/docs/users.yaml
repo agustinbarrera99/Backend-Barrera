@@ -1,0 +1,495 @@
+openapi: 3.0.0
+info:
+  title: Users and Sessions API
+  version: 1.0.0
+paths:
+  /api/users:
+    post:
+      summary: Create a new user
+      tags:
+        - Users
+      security:
+        - cookieAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/res401'
+        '403':
+          $ref: '#/components/responses/res403'
+        '500':
+          $ref: '#/components/responses/res500'
+    get:
+      summary: Get all users
+      tags:
+        - Users
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/res401'
+        '403':
+          $ref: '#/components/responses/res403'
+        '500':
+          $ref: '#/components/responses/res500'
+
+  /api/users/{uid}:
+    get:
+      summary: Get a specific user by ID
+      tags:
+        - Users
+      security:
+        - cookieAuth: []
+      parameters:
+        - in: path
+          name: uid
+          required: true
+          schema:
+            type: string
+          description: ID of the user to retrieve
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/res401'
+        '403':
+          $ref: '#/components/responses/res403'
+        '404':
+          $ref: '#/components/responses/res404'
+        '500':
+          $ref: '#/components/responses/res500'
+    put:
+      summary: Update a specific user by ID
+      tags:
+        - Users
+      security:
+        - cookieAuth: []
+      parameters:
+        - in: path
+          name: uid
+          required: true
+          schema:
+            type: string
+          description: ID of the user to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/res401'
+        '403':
+          $ref: '#/components/responses/res403'
+        '404':
+          $ref: '#/components/responses/res404'
+        '500':
+          $ref: '#/components/responses/res500'
+    delete:
+      summary: Delete a specific user by ID
+      tags:
+        - Users
+      security:
+        - cookieAuth: []
+      parameters:
+        - in: path
+          name: uid
+          required: true
+          schema:
+            type: string
+          description: ID of the user to delete
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/res401'
+        '403':
+          $ref: '#/components/responses/res403'
+        '404':
+          $ref: '#/components/responses/res404'
+        '500':
+          $ref: '#/components/responses/res500'
+
+  /api/sessions/register:
+    post:
+      summary: Register a new user
+      tags:
+        - Sessions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Register'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/res400'
+        '500':
+          $ref: '#/components/responses/res500'
+
+  /api/sessions/login:
+    post:
+      summary: Log in a user
+      tags:
+        - Sessions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/res401'
+        '500':
+          $ref: '#/components/responses/res500'
+
+  /api/sessions/me:
+    get:
+      summary: Get logged-in user info
+      tags:
+        - Sessions
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/res401'
+        '500':
+          $ref: '#/components/responses/res500'
+
+  /api/sessions/signout:
+    post:
+      summary: Sign out the current user
+      tags:
+        - Sessions
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Signed out!"
+        '401':
+          $ref: '#/components/responses/res401'
+        '500':
+          $ref: '#/components/responses/res500'
+
+  /api/sessions/google:
+    post:
+      summary: Sign in with Google
+      tags:
+        - Sessions
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Logged in with Google!"
+        '401':
+          $ref: '#/components/responses/res401'
+        '500':
+          $ref: '#/components/responses/res500'
+
+  /api/sessions/google/callback:
+    get:
+      summary: Google sign-in callback
+      tags:
+        - Sessions
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Logged in with Google!"
+        '401':
+          $ref: '#/components/responses/res401'
+        '500':
+          $ref: '#/components/responses/res500'
+
+  /api/sessions/verify:
+    post:
+      summary: Verify a user account
+      tags:
+        - Sessions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Verify'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Usuario verificado"
+        '401':
+          $ref: '#/components/responses/res401'
+        '500':
+          $ref: '#/components/responses/res500'
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: ID of the user
+        name:
+          type: string
+          description: Name of the user
+        email:
+          type: string
+          description: Email of the user
+        role:
+          type: number
+          enum:
+            - 0
+            - 1
+            - 2
+          description: Role of the user
+        photo:
+          type: string
+          description: Photo URL of the user
+        verified:
+          type: boolean
+          description: Whether the user is verified
+        verifyCode:
+          type: string
+          description: Verification code for the user
+        createdAt:
+          type: string
+          format: date-time
+          description: Date and time when the user was created
+        updatedAt:
+          type: string
+          format: date-time
+          description: Date and time when the user was last updated
+      example:
+        _id: user123
+        name: John Doe
+        email: john.doe@example.com
+        role: 0
+        photo: "https://example.com/photo.jpg"
+        verified: false
+        verifyCode: "abcdef123456"
+        createdAt: "2024-06-17T12:00:00Z"
+        updatedAt: "2024-06-17T12:00:00Z"
+
+    Register:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the user
+        email:
+          type: string
+          description: Email of the user
+        password:
+          type: string
+          description: Password of the user
+      required:
+        - name
+        - email
+        - password
+      example:
+        name: John Doe
+        email: john.doe@example.com
+        password: password123
+
+    Login:
+      type: object
+      properties:
+        email:
+          type: string
+          description: Email of the user
+        password:
+          type: string
+          description: Password of the user
+      required:
+        - email
+        - password
+      example:
+        email: john.doe@example.com
+        password: password123
+
+    Verify:
+      type: object
+      properties:
+        email:
+          type: string
+          description: Email of the user
+        verifyCode:
+          type: string
+          description: Verification code of the user
+      required:
+        - email
+        - verifyCode
+      example:
+        email: john.doe@example.com
+        verifyCode: abcdef123456
+
+  responses:
+    res400:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                type: number
+                description: Status code of the response
+              message:
+                type: string
+                description: Error message
+            example:
+              statusCode: 400
+              message: "Bad Request"
+
+    res401:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                type: number
+                description: Status code of the response
+              message:
+                type: string
+                description: Error message
+            example:
+              statusCode: 401
+              message: "Bad Auth!"
+
+    res403:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                type: number
+                description: Status code of the response
+              message:
+                type: string
+                description: Error message
+            example:
+              statusCode: 403
+              message: "Forbidden"
+
+    res404:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                type: number
+                description: Status code of the response
+              message:
+                type: string
+                description: Error message
+            example:
+              statusCode: 404
+              message: "User not found"
+
+    res500:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode:
+                type: number
+                description: Status code of the response
+              message:
+                type: string
+                description: Error message
+            example:
+              statusCode: 500
+              message: "Internal Server Error"
+
+securitySchemes:
+  cookieAuth:
+    type: apiKey
+    in: cookie
+    name: token

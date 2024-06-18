@@ -1,0 +1,22 @@
+config:
+  plugins:
+    metrics-by-endpoint: {}
+  target: http://localhost:8080/api
+phases:
+  - duration: 10
+    arrivalRate: 50
+scenarios:
+  - name: login, read, signout
+    flow:
+      - log: login
+      - post:
+          url: /sessions/login
+          json:
+            email: agustinbarrera.ri@gmail.com
+            password: hola1234
+      - log: read
+      - get:
+          url: /products
+      - log: signout
+      - post:
+          url: /sessions/signout
