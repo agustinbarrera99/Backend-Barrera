@@ -28,7 +28,7 @@ server.engine("handlebars", engine());
 server.set("view engine", "handlebars");
 server.set("views", __dirname + "/src/views");
 
-server.use(cookieParser(env.SECRET_KEY));
+server.use(cookieParser(process.env.SECRET_KEY));
 server.use("/api/docs", serve, setup(specs));
 
 const router = new IndexRouter();
