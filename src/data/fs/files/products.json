@@ -1,32 +1,22 @@
 [
   {
-    "_id": "66387d71df0b373edf4f552b",
-    "title": "producto premium fs otro usuario",
+    "_id": "fa9ad3e7642b6bf3cf203407",
+    "title": "celular",
     "photo": "https://jkfenner.com/wp-content/uploads/2019/11/default.jpg",
-    "price": 200,
-    "stock": 40,
-    "owner_id": "a54b502e9537910294a4c690",
-    "updatedAt": "2024-06-16T03:54:05.651Z",
-    "createdAt": "2024-06-16T03:54:05.651Z"
+    "price": 300,
+    "stock": 98,
+    "owner_id": "5384f6f6b85af21291cd79b8",
+    "updatedAt": "2024-06-18T00:29:31.261Z",
+    "createdAt": "2024-06-18T00:29:31.261Z"
   },
   {
-    "_id": "a6f329437d1c4e7b65ab89fd",
-    "title": "producto premium fs solo admin",
+    "_id": "dd9aea539b1a827a1eb326d0",
+    "title": "celular",
     "photo": "https://jkfenner.com/wp-content/uploads/2019/11/default.jpg",
-    "price": 200,
-    "stock": 40,
-    "owner_id": "a4638d91a822421c81d911fd",
-    "updatedAt": "2024-06-16T05:59:32.698Z",
-    "createdAt": "2024-06-16T05:59:32.698Z"
-  },
-  {
-    "_id": "eef69b7fc9b074433922d696",
-    "title": "producto premium fs solo admin",
-    "photo": "https://jkfenner.com/wp-content/uploads/2019/11/default.jpg",
-    "price": 200,
-    "stock": 40,
-    "owner_id": "a4638d91a822421c81d911fd",
-    "updatedAt": "2024-06-16T06:07:46.850Z",
-    "createdAt": "2024-06-16T06:07:46.850Z"
+    "price": 300,
+    "stock": 98,
+    "owner_id": "5384f6f6b85af21291cd79b8",
+    "updatedAt": "2024-06-18T00:30:25.851Z",
+    "createdAt": "2024-06-18T00:30:25.851Z"
   }
 ]

@@ -1,15 +1,17 @@
-import repository from "../repositories/payments.rep.js"
+import repository from "../repositories/payments.rep.js";
 
 class PaymentsService {
-    constructor() {
-        this.repository = repository
+  constructor() {
+    this.repository = repository;
+  }
+  payment = async (filter) => {
+    try {
+      const response = await this.repository.payment(filter);
+      return response;
+    } catch (error) {
+      throw error;
     }
-    payment = async() => {
-        const response = await this.repository()
-        return response
-    } 
+  };
 }
 
-export const service = new PaymentsService()
-
-export const { payment } = service
+export const service = new PaymentsService();

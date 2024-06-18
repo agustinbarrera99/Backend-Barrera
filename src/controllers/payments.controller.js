@@ -1,17 +1,19 @@
-import { service } from "../services/payments.services.js"
+import { service } from "../services/payments.services.js";
 
 class PaymentsController {
     constructor() {
-        this.service = service
+        this.service = service;
     }
     payment = async (req, res, next) => {
         try {
-            return res.json({response: req.user._id})
+            const { _id } = req.user;
+            const response = await this.service.payment({ user_id: _id });
+            return res.success200(response);
         } catch (error) {
-            next(error)
+            next(error);
         }
     }
 }
 
-const controller = new PaymentsController()
-export const { payment } = controller
+const controller = new PaymentsController();
+export const { payment } = controller;

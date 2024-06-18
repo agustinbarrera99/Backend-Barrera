@@ -11,6 +11,7 @@ async function configureDAO() {
 
   switch (environment) {
     case "prod":
+      dbConnection(DB_LINK)
       logger.INFO("MONGO CONNECT");
       const { default: productsMongo } = await import("./mongo/products.mongo.js");
       const { default: usersMongo } = await import("./mongo/users.mongo.js");
