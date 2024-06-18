@@ -1,4 +1,3 @@
-import env from "./src/utils/env.util.js";
 import express from "express";
 import errorHandler from "./src/middlewares/errorHandler.mid.js";
 import pathHandler from "./src/middlewares/pathHandler.mid.js";
@@ -18,7 +17,7 @@ import { serve, setup } from "swagger-ui-express";
 // import { cpus } from "os";
 
 const server = express();
-const PORT = env.PORT;
+const PORT = process.env.PORT;
 const specs = swaggerJSDoc(swaggerOptions);
 
 const ready = () => {
